@@ -4,15 +4,22 @@ from df.enhance import enhance, init_df, load_audio, save_audio
 from df.utils import download_file
 import numpy as np
 import matplotlib.pyplot as plt
+import sys, os
 
+root = os.path.dirname(__file__).replace("\\", "/")
+
+# os.path.dirname()
+# sys.path.append(os.getcwd())
+
+#%%
 model, df_state, _ = init_df()  # Load default model
 # noisy_audio_path = "A:/gitclones/EEproject/raw_data/assets_noisy_snr0.wav"
 noisy_audio_path = "A:/gitclones/EEproject/Test4.wav"
-# Download and open some audio file. You use your audio files here
-audio_path = download_file(
-        "https://github.com/Rikorose/DeepFilterNet/raw/e031053/assets/noisy_snr0.wav",
-        download_dir=".",
-    )
+# ===== down load audio file if not have in local 
+# audio_path = download_file(
+#         "https://github.com/Rikorose/DeepFilterNet/raw/e031053/assets/noisy_snr0.wav",
+#         download_dir=".",
+#     )
 noisy_audio, _ = load_audio(noisy_audio_path) #, sr=df_state.sr())
 
 enhanced_audio = enhance(model, df_state, noisy_audio)

@@ -91,7 +91,7 @@ class ANC_interface(Ui_MainWindow, QMainWindow):
 
 
     def _temp_add_a_music(self):
-        audio_data_path = "A:/gitclones/EEproject/src/noisy_snr0.wav"
+        audio_data_path = "A:/gitclones/EEproject/raw_data/noisy_snr0.wav"
         audio_meta_data: AudioMetaData = ta.info(audio_data_path)
         audio_signal, _ = ta.load(audio_data_path)
         

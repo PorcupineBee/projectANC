@@ -1,0 +1,23 @@
+name: ANCpy311
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.11
+  - python-socketio
+  - matplotlib
+  - numpy
+  - scipy
+  - ipykernel
+  - plotly
+  - pyqt
+  - pyqtgraph
+  - opencv
+  - ipywidgets
+  - sounddevice
+  - pip
+  - pip:
+      - torch
+      - torchaudio
+      - deepfilternet
+      - -f https://download.pytorch.org/whl/cpu/torch_stable.html
