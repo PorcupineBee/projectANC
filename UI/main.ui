@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1021</width>
+    <height>714</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(50, 50, 50);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ANC Experiment&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/* Tab Widget Background */
+QTabWidget::pane {
+    background: #1e272e; /* Dark background for tab content */
+    border-radius: 6px;
+}
+
+/* Tab Bar */
+QTabBar::tab {
+    background: #aaa; /* Dark gray tab background */
+    color: #aaa; /* Light text color */
+    border: 1px solid #555; /* Darker border */
+    padding: -5px 5px 10px 5px;
+    margin: 0px;
+}
+
+/* Selected (Active) Tab */
+QTabBar::tab:selected {
+  /*  background: rgb(255, 255, 127) ;*/
+	background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */
+    color: #999;
+    border: 2px solid #fafa98;
+    font-weight: bold;
+}
+
+/* Hover Effect */
+QTabBar::tab:hover {
+    background: rgb(255, 255, 127); /* Lighter blue when hovering */
+background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */
+	border: 1px solid black;
+}
+
+/* Inactive Tabs */
+QTabBar::tab:!selected {
+/*    background: rgb(85, 170, 127); */ /* Dark gray */
+	background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(80, 100, 80, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */
+    color: #bdc3c7; /* Light gray text */
+}
+
+/* Disabled Tabs */
+QTabBar::tab:disabled {
+    color: #7f8c8d; /* Faded text */
+    background: #3a4f5c;
+    border-color: #2c3e50;
+}
+QTabWidget::tab-bar {
+    alignment: left; /* Aligns the tab bar to the center */
+transform:rotate(90deg);
+}
+
+/*Group boxes*/
+/* GroupBox Main Styling */
+QGroupBox {
+    border: 2px solid rgb(255, 255, 127); /* Slightly lighter border */
+    border-radius: 8px;
+    margin-top: 30px; /* Space for title */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* GroupBox Title */
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* Center the title */
+    background-color: transparent; /* No background for title */
+    padding: 5px 10px;
+    color: rgb(255, 255, 127); /* Blue title color */
+}
+
+/* GroupBox When Disabled */
+QGroupBox:disabled {
+    color: #7f8c8d; /* Faded text color */
+    border-color: #3a4f5c;
+}
+
+</string>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>20</width>
+        <height>30</height>
+       </size>
+      </property>
+      <widget class="QWidget" name="tab">
+       <property name="styleSheet">
+        <string notr="true">/* Default Button */
+QPushButton {
+    background-color: rgb(200, 200, 127);  /* Dark gray background */
+    background-color:#dd7973;  /* Dark gray background */
+ background-color:rgb(255, 0, 127);  /* Dark gray background */
+    color: #ecf0f1;  /* Light text */
+    /*color: #555;  */
+	border:None;
+  /*  border-bottom: 3px solid rgb(160, 160, 0); 
+    border-right: 3px solid rgb(160, 160, 0);*/
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 14px;
+font-weight: bold;
+}
+
+/* Hover Effect */
+QPushButton:hover {
+    background-color: rgb(0, 0, 175);  /* Slightly lighter on hover */
+    border: None;  /* Blue border */
+    color: white;
+}
+
+/* Pressed Effect */
+QPushButton:pressed {
+    background-color: #1f2e3d;  /* Darker shade when pressed */
+    border: 2px solid #2980b9;  /* Darker blue border */
+}
+
+/* Disabled Button */
+QPushButton:disabled {
+    background-color: #3a4f5c;  /* Muted gray */
+    color: #7f8c8d;  /* Faded text */
+    border: 2px solid #2c3e50;
+}
+</string>
+       </property>
+       <attribute name="icon">
+        <iconset>
+         <normaloff>icons/analysis_9828989.png</normaloff>
+         <normalon>icons/analysis_9828873.png</normalon>
+         <disabledoff>icons/analysis_9828989.png</disabledoff>icons/analysis_9828989.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>ANC experiment</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
+        <property name="spacing">
+         <number>5</number>
+        </property>
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>130</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Settings</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="frame_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <property name="leftMargin">
+                <number>5</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="Show_residual_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Show residual</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="show_ps_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Show power spectrum</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="start_recording_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Start recording</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clean_the_audio_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Denoise</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="leftMargin">
+                <number>5</number>
+               </property>
+               <property name="topMargin">
+                <number>2</number>
+               </property>
+               <property name="rightMargin">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="restart_btn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">padding:0px 10px ;
+background-color: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(64, 127, 191, 255), stop:1 rgba(255, 255, 255, 255));</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/backward-track.png</normaloff>icons/backward-track.png</iconset>
+                 </property>
+                 <property name="shortcut">
+                  <string>Ctrl+R</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="Play_pause_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">padding:0px 5px;
+background-color: rgb(64, 127, 191);
+background-color: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(64, 127, 191, 255), stop:1 rgba(255, 255, 255, 255));</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset>
+                   <normaloff>icons/pause.png</normaloff>icons/pause.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>29</width>
+                   <height>31</height>
+                  </size>
+                 </property>
+                 <property name="shortcut">
+                  <string>Ctrl+P</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="add_Audio_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Browse for Audio</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="browse_noise_audio_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Browse for Noise audio</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="noise_type_comboBox">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* ComboBox Main Styling */
+QComboBox {
+    background-color: #2c3e50; /* Dark background */
+    border: 2px solid #34495e; /* Slightly lighter border */
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: #ecf0f1; /* Light text */
+    font-size: 14px;
+}
+
+/* Dropdown Arrow */
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+    background: transparent;
+}
+
+QComboBox::down-arrow {
+    image: url(down-arrow.png); /* Replace with actual path if needed */
+    width: 12px;
+    height: 12px;
+}
+
+QComboBox::down-arrow:hover {
+    image: url(down-arrow-hover.png);
+}
+
+/* Popup List */
+QComboBox QAbstractItemView {
+    background-color: #2c3e50; /* Dark background */
+    border: 1px solid #34495e;
+    selection-background-color: #2980b9; /* Blue highlight for selection */
+    selection-color: white;
+    padding: 4px;
+}
+
+/* Hover Effect */
+QComboBox:hover {
+    background-color: #3b5366;
+    border: 2px solid #5dade2; /* Blue border */
+}
+
+/* When Pressed */
+QComboBox:pressed, QComboBox:on {
+    background-color: #1f2e3d;
+    border: 2px solid #2980b9;
+}
+
+/* Disabled */
+QComboBox:disabled {
+    background-color: #3a4f5c;
+    color: #7f8c8d;
+    border-color: #2c3e50;
+}
+</string>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Select a noise signal</string>
+                 </property>
+                 <property name="frame">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QFrame" name="frame_2">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QSplitter" name="splitter_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>230</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="title">
+                <string>Signal Index Tree</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>5</number>
+                </property>
+                <property name="topMargin">
+                 <number>7</number>
+                </property>
+                <property name="rightMargin">
+                 <number>5</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>5</number>
+                </property>
+                <item>
+                 <widget class="QTreeWidget" name="treeWidget">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>220</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">/* QTreeWidget Background and Borders */
+QTreeWidget {
+    background-color: #2c3e50; /* Dark background */
+    border: 1px solid #1e272e; /* Darker border */
+    color: #ecf0f1; /* Light text */
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+/* Alternate Row Colors */
+QTreeWidget::item {
+    background-color: #34495e; /* Default row background */
+}
+
+QTreeWidget::item:alternate {
+    background-color: #3b5366; /* Slightly lighter background for alternate rows */
+}
+
+/* Selected Item */
+QTreeWidget::item:selected {
+    background-color: #2980b9; /* Blue selection */
+    color: white;
+    border: 1px solid #1f618d;
+}
+
+/* Hover Effect */
+QTreeWidget::item:hover {
+    background-color: #5dade2; /* Light blue on hover */
+}
+
+/* Disabled Items */
+QTreeWidget::item:disabled {
+    color: #7f8c8d; /* Muted text */
+    background-color: #3a4f5c;
+}
+
+/* Scrollbar Styling */
+QTreeWidget QScrollBar:vertical {
+    border: none;
+    background: #2c3e50;
+    width: 10px;
+}
+
+QTreeWidget QScrollBar::handle:vertical {
+    background: #3498db;
+    border-radius: 5px;
+}
+
+QTreeWidget QScrollBar::handle:vertical:hover {
+    background: #2980b9;
+}
+
+QTreeWidget QScrollBar::add-line, 
+QTreeWidget QScrollBar::sub-line {
+    background: none;
+    border: none;
+}
+</string>
+                  </property>
+                  <attribute name="headerVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="headerMinimumSectionSize">
+                   <number>10</number>
+                  </attribute>
+                  <attribute name="headerDefaultSectionSize">
+                   <number>50</number>
+                  </attribute>
+                  <attribute name="headerShowSortIndicator" stdset="0">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="headerStretchLastSection">
+                   <bool>false</bool>
+                  </attribute>
+                  <column>
+                   <property name="text">
+                    <string>Audio Items</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </column>
+                  <item>
+                   <property name="text">
+                    <string>⏹️     Signal 1</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>⏹️     Signal 2</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Signal waveform viewbox</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QTableWidget" name="spectrumViewbox">
+                  <attribute name="horizontalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderDefaultSectionSize">
+                   <number>50</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <row>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </row>
+                  <column>
+                   <property name="text">
+                    <string>signal profile index</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Waveform</string>
+                   </property>
+                  </column>
+                  <item row="0" column="0">
+                   <property name="text">
+                    <string>1</string>
+                   </property>
+                  </item>
+                  <item row="0" column="1">
+                   <property name="text">
+                    <string>jnjjkj</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>icons/sharing_954869.png</normaloff>
+         <normalon>icons/sharing_955097.png</normalon>icons/sharing_954869.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string/>
+       </attribute>
+       <attribute name="toolTip">
+        <string>Real time communication</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>This side</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QFrame" name="frame_7">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QSplitter" name="splitter_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <widget class="QGroupBox" name="groupBox_11">
+                 <property name="title">
+                  <string>Recorded signal waveform</string>
+                 </property>
+                </widget>
+                <widget class="QGroupBox" name="groupBox_12">
+                 <property name="title">
+                  <string>Noise signal waveform</string>
+                 </property>
+                </widget>
+                <widget class="QGroupBox" name="groupBox_13">
+                 <property name="title">
+                  <string>Transmitted signal waveform</string>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_8">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>100</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>Receiver end</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
