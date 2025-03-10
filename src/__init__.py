@@ -1,3 +1,3 @@
-from .interface import ANC_interface
+from .interface import NoiseShiled
 
-__all__ = ["ANC_interface"]
+__all__ = ["NoiseShiled"]
