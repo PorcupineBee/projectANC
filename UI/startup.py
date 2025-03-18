@@ -15,6 +15,9 @@ class Ui_NoiseShieldPopUp(object):
     def setupUi(self, NoiseShieldPopUp):
         NoiseShieldPopUp.setObjectName("NoiseShieldPopUp")
         NoiseShieldPopUp.resize(520, 371)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("icons/nsicon-removebg-preview.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        NoiseShieldPopUp.setWindowIcon(icon)
         NoiseShieldPopUp.setStyleSheet("QWidget {\n"
 "    background-color: rgb(50, 50, 50);\n"
 "    font: 8pt \"Comic Sans MS\";\n"

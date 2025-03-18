@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>NoiseShield</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/nsicon-removebg-preview.png</normaloff>icons/nsicon-removebg-preview.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
 	background-color: rgb(50, 50, 50);

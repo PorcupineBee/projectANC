@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>NoiseShield</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/nsicon-removebg-preview.png</normaloff>icons/nsicon-removebg-preview.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(50, 50, 50);
 font: 8pt &quot;Arial&quot;;
@@ -722,6 +726,12 @@ QTreeWidget QScrollBar::sub-line {
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <item>
                  <widget class="QTableWidget" name="spectrumViewbox">
+                  <property name="verticalScrollMode">
+                   <enum>QAbstractItemView::ScrollPerPixel</enum>
+                  </property>
+                  <property name="horizontalScrollMode">
+                   <enum>QAbstractItemView::ScrollPerPixel</enum>
+                  </property>
                   <attribute name="horizontalHeaderVisible">
                    <bool>false</bool>
                   </attribute>

@@ -17,7 +17,9 @@ import os, json, uuid
 import matplotlib.pyplot as plt
 import pandas as pd
 import datetime
-
+from UI.plotsignal import defaultPlotSettings, TimeSeriesPlotWidget
+from UI.play_soundbox import NoisePlayerThread
+from .utiles import getAudioSignal_n_Time, signal_registry
 
 # region Auxillary functions
 def saveNewProject(parent, **kwargs):
@@ -62,7 +64,6 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.project_registry = signal_registry()
-        self.spectrumViewbox
         self.Show_residual_btn.clicked.connect(self.Show_residual_action)
         self.show_ps_btn.clicked.connect(self.show_ps_action)
         self.start_recording_btn.clicked.connect(self.start_recording_action)
@@ -72,9 +73,11 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.add_Audio_btn.clicked.connect(self.add_Audio_action)
         self.browse_noise_audio_btn.clicked.connect(self.browse_noise_audio_action)
         self.noise_type_comboBox.currentIndexChanged.connect(self.noise_type_comboaction)
+        
         self.extra_ui()
-
         self._temp_add_a_music()
+        self.order_key = dict()
+        
         
     def Show_residual_action(self):
         """
@@ -115,9 +118,19 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         """
 
         """
+        self.running = not self.running
+        if self.running:
+            self.audioThread = NoisePlayerThread()
+            self.audioThread.toggle_signal.connect(self.Play_pause_action)
+            self.audioThread.moveINfLines.connect(self.move_inf_lines)
+            self.audioThread.start()
+
+    def move_inf_lines(self):
+        """
+
+        """
         ...
-
-
+        
     def add_Audio_action(self):
         """
 
@@ -127,21 +140,57 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                         "Audio Files (*.wav *.mp3 *.flac *.ogg *.aac);;All Files (*)", options=options)
 
         if file_path:
+            signal, time = getAudioSignal_n_Time(file_path)   
+            self.addASignalStremer(signal, time, "signal")
             self.showStatus(file_path, align="right")
 
     def browse_noise_audio_action(self):
         """
 
         """
-        ...
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Noise Audio File", "", 
+                        "Audio Files (*.wav *.mp3 *.flac *.ogg *.aac);;All Files (*)", options=options)
+
+        if file_path:
+            signal, time = getAudioSignal_n_Time(file_path)   
+            self.addASignalStremer(signal, time, "Noise")
+            self.showStatus(file_path, align="right")
+        
 
 
-    def noise_type_comboaction(self):
+    def noise_type_comboaction(self, index:int):
         """
 
         """
-        ...
+        path = "A:/NoiseShiled_noise_data"
+        audio_file = os.path.join(path, self.noise_file_data[f"{index+1}"])     
+        self.addASignalStremer("noise", audio_file)
 
+    
+    
+    def addASignalStremer(self, stype:str, audio_file:str, ):
+        """
+        """
+        
+        signal, time, order, signal_key = self.project_registry.add_signal(fpath=audio_file, type=stype)
+        
+        plotsetting = defaultPlotSettings()
+        plotsetting["signal"] = signal
+        plotsetting["time"] = time
+        plotsetting["signal_info"]["type"] = stype
+        
+        tspwidegt = TimeSeriesPlotWidget(**plotsetting) 
+        self.spectrumViewbox.setRowCount(order+1)
+        self.spectrumViewbox.setRowHeight(order, 200)
+        self.spectrumViewbox.setCellWidget(order, 1, tspwidegt)
+        self.order_key.update({order:
+            dict(
+                name=signal_key,
+                widget=tspwidegt
+                )
+            })
+        
 
     def showStatus(self, message:str=None, align="left",**kwargs):
         if align=="left":
@@ -157,6 +206,12 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.statusbar.addPermanentWidget(self.status_text)
         self.startupwind = StartUpInterface(self)
         self.startupwind.show()
+        
+        with open("src/noise_file_data.json", "r") as f:
+            self.noise_file_data = json.load(f)
+            f.close()
+        for key, value in self.noise_file_data.items():
+            self.noise_type_comboBox.addItem(value) 
     
     def load_project(self, registry:dict):
         self.project_registry.signals_df = registry
@@ -170,7 +225,14 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             except Exception as e:
                 print(e)
                 self.showStatus("Error occurred while saving the project", align="left")
+    
+    def closeEvent(self, a0):
+        for _ , dictobj in self.order_key.items():
+            tsWidget = dictobj["widget"]
+            tsWidget.closeWidget()
             
+        return super().closeEvent(a0)
+    
     def _temp_add_a_music(self):
         audio_data_path = "A:/gitclones/EEproject/raw_data/noisy_snr0.wav"
         plot_widget = plot_this_audio_file(audio_data_path)
@@ -179,46 +241,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
 
 # endregion
 
-# region signal_registry
-class signal_registry():
-    def __init__(self):
-        self.signals_df = {"project_id":None}
-        self.current_signal = None
-    
-    def add_signal(self, fpath:str, **kwargs):
-        import uuid
-        _uuid = str(uuid.uuid4())
-        self.signals_df.update({
-            str(_uuid):{
-                "fpath":fpath,
-                "order":self.__len__(),
-                "amplitude":kwargs.get("amplitude", 1),
-                "duration":kwargs.get("duration", None),
-                "num_frames":kwargs.get("num_frames", None),
-                "sample_rate":kwargs.get("sample_rate", None),
-                "num_samples":kwargs.get("num_samples", None),
-                "offset":kwargs.get("offset", None),
-                "window_length":kwargs.get("frames", None),
-                "type":kwargs.get("type", "audio")
-            }
-        })
-    
-    def __len__(self):
-        return len(self.signals_df)
-    
-    def row(self, row:int):
-        pass
-    
-    def saveCache(self, working_dir, **kwargs):
-        if (self.signals_df["project_id"] is None) and ("project_id" in kwargs.keys()):            
-            self.signals_df["project_id"] = kwargs.pop("project_id") 
-        else:
-            raise ValueError("Project ID is not set")
-            
-        with open(os.path.join(working_dir, ".cache/project_cache.json"), "w") as f:
-            json.dump(self.signals_df, f)
-            f.close()
-#endregion          
+
 # region signal plot class 
 def plot_this_audio_file(file:str):
     audio_meta_data: AudioMetaData = ta.info(file)
