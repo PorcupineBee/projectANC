@@ -1,16 +1,13 @@
-python=3.11.11
+python==3.11.11
 python-socketio
 matplotlib
 numpy
 scipy
 ipykernel
 plotly
-pyqt
+pyqt6
 pyqtgraph
-opencv
+opencv-python
 ipywidgets
 sounddevice
-torch
-torchaudio
 deepfilternet
-# -f https://download.pytorch.org/whl/cpu/torch_stable.html
