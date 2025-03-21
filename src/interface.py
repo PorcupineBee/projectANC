@@ -35,7 +35,6 @@ def saveNewProject(parent, **kwargs):
                 json.dump({"project_id" : project_id}, f)
                 f.close()
             
-        
         with open(checkGUIcache(), "a") as f:
             f.write(f"{project_id},{folderpath},{timestamp}\n")
             f.close()
@@ -75,7 +74,9 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.noise_type_comboBox.currentIndexChanged.connect(self.noise_type_comboaction)
         
         self.extra_ui()
-        self._temp_add_a_music()
+        self.input_audio_spectrum()
+        self.output_audio_spectrum()
+        # self._temp_add_a_music()
         self.order_key = dict()
         
         
@@ -233,11 +234,19 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             
         return super().closeEvent(a0)
     
-    def _temp_add_a_music(self):
-        audio_data_path = "A:/gitclones/EEproject/raw_data/noisy_snr0.wav"
-        plot_widget = plot_this_audio_file(audio_data_path)
-        self.spectrumViewbox.setRowHeight(0, 200)
-        self.spectrumViewbox.setCellWidget(0, 1, plot_widget)
+    # def _temp_add_a_music(self):
+    #     audio_data_path = "A:/gitclones/EEproject/raw_data/noisy_snr0.wav"
+    #     plot_widget = plot_this_audio_file(audio_data_path)
+    #     self.spectrumViewbox.setRowHeight(0, 200)
+    #     self.spectrumViewbox.setCellWidget(0, 1, plot_widget)
+
+    def input_audio_spectrum(self):
+        
+        ...
+
+    def output_audio_spectrum(self):
+        
+        ...
 
 # endregion
 

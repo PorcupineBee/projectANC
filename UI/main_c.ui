@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1021</width>
+    <width>983</width>
     <height>714</height>
    </rect>
   </property>
@@ -745,11 +745,6 @@ QTreeWidget QScrollBar::sub-line {
                   <attribute name="verticalHeaderCascadingSectionResizes">
                    <bool>true</bool>
                   </attribute>
-                  <row>
-                   <property name="text">
-                    <string>1</string>
-                   </property>
-                  </row>
                   <column>
                    <property name="text">
                     <string>signal profile index</string>
@@ -760,16 +755,6 @@ QTreeWidget QScrollBar::sub-line {
                     <string>Waveform</string>
                    </property>
                   </column>
-                  <item row="0" column="0">
-                   <property name="text">
-                    <string>1</string>
-                   </property>
-                  </item>
-                  <item row="0" column="1">
-                   <property name="text">
-                    <string>jnjjkj</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                </layout>
@@ -820,11 +805,6 @@ QTreeWidget QScrollBar::sub-line {
                   <string>Recorded signal waveform</string>
                  </property>
                 </widget>
-                <widget class="QGroupBox" name="groupBox_12">
-                 <property name="title">
-                  <string>Noise signal waveform</string>
-                 </property>
-                </widget>
                 <widget class="QGroupBox" name="groupBox_13">
                  <property name="title">
                   <string>Transmitted signal waveform</string>
@@ -843,12 +823,60 @@ QTreeWidget QScrollBar::sub-line {
                <height>100</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true">/* Default Button */
+QPushButton {
+	background-color: rgb(191, 200, 187);
+    color: #555; /* */
+	border:None;
+  /*  border-bottom: 3px solid rgb(160, 160, 0); 
+    border-right: 3px solid rgb(160, 160, 0);*/
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 14px;
+font-weight: bold;
+}
+
+/* Hover Effect */
+QPushButton:hover {
+    background-color: rgb(0, 0, 175);  /* Slightly lighter on hover */
+    border: None;  /* Blue border */
+    color: white;
+}
+
+/* Pressed Effect */
+QPushButton:pressed {
+    background-color: #1f2e3d;  /* Darker shade when pressed */
+    border: 2px solid #2980b9;  /* Darker blue border */
+}
+
+/* Disabled Button */
+QPushButton:disabled {
+    background-color: #3a4f5c;  /* Muted gray */
+    color: #7f8c8d;  /* Faded text */
+    border: 2px solid #2c3e50;
+}
+</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
              <property name="frameShadow">
               <enum>QFrame::Raised</enum>
              </property>
+             <widget class="QPushButton" name="pushButton">
+              <property name="geometry">
+               <rect>
+                <x>280</x>
+                <y>20</y>
+                <width>93</width>
+                <height>28</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Start</string>
+              </property>
+             </widget>
             </widget>
            </item>
           </layout>

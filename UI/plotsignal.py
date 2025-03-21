@@ -135,29 +135,32 @@ QDoubleSpinBox::down-arrow {
     width: 5px;
     height: 5px;
 }
+QLabel {
+    color:#f1f1f1;
+}
 """)
         slider_layout = QHBoxLayout()
         
-        self.amp_label = QLabel("Amplitude:")
+        amp_label = QLabel("Amplitude:")        
         self.amp_slider = QDoubleSpinBox()
         self.amp_slider.setRange(0, 1)
         self.amp_slider.setValue(1)
         self.amp_slider.setSingleStep(0.1)
         self.amp_slider.setDecimals(2)
         self.amp_slider.valueChanged.connect(self.update_plot)
-        slider_layout.addWidget(self.amp_label)
+        slider_layout.addWidget(amp_label)
         slider_layout.addWidget(self.amp_slider)
         
         # Offset slider and label frame
         
-        self.shift_label = QLabel("Offset:")
+        shift_label = QLabel("Offset:")
         self.shift_slider = QDoubleSpinBox()
         self.shift_slider.setRange(-self.timelimit, self.timelimit)  # Scaled to 0-10s
         self.shift_slider.setValue(self.signal_info["offset"])
         self.shift_slider.setSingleStep(1)
         self.shift_slider.setDecimals(1)
         self.shift_slider.valueChanged.connect(self.update_plot)
-        slider_layout.addWidget(self.shift_label)
+        slider_layout.addWidget(shift_label)
         slider_layout.addWidget(self.shift_slider)
         
         # play button
@@ -175,7 +178,7 @@ QDoubleSpinBox::down-arrow {
         slider_layout.addItem(spacerItem1)
         
         
-        slider_layout.setContentsMargins(10, 0, 0, 0)
+        slider_layout.setContentsMargins(10, 5, 0, 0)
         slider_layout.setSpacing(10)
         # Add slider frames to horizontal layout
         slider_frame.setLayout(slider_layout)

@@ -70,7 +70,8 @@ class ClientGUI(QWidget):
         self.stop_button.clicked.connect(self.stop_client)
 
     def start_client(self):
-        server_ip = "192.168.1.100"  # Change to your server's IP
+        # server_ip = "192.168.1.100"  # Change to your server's IP
+        server_ip = "192.168.137.1"  # Change to your server's IP
         self.audio_thread = AudioSender(server_ip)
         self.audio_thread.update_status.connect(self.update_status)
         self.audio_thread.start()
