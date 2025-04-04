@@ -131,14 +131,14 @@ QGroupBox:disabled {
         <string notr="true">/* Default Button */
 QPushButton {
 	background-color: rgb(191, 200, 187);
-    color: #555; /* */
+    color: black; /* */
 	border:None;
   /*  border-bottom: 3px solid rgb(160, 160, 0); 
     border-right: 3px solid rgb(160, 160, 0);*/
     border-radius: 5px;
     padding: 8px 16px;
     font-size: 14px;
-font-weight: bold;
+/*font-weight: bold;*/
 }
 
 /* Hover Effect */
@@ -205,7 +205,7 @@ QPushButton:disabled {
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>130</height>
+             <height>100</height>
             </size>
            </property>
            <property name="title">
@@ -227,107 +227,6 @@ QPushButton:disabled {
             <property name="bottomMargin">
              <number>5</number>
             </property>
-            <item>
-             <widget class="QFrame" name="frame_9">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <property name="spacing">
-                <number>4</number>
-               </property>
-               <property name="leftMargin">
-                <number>5</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>5</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QPushButton" name="Show_residual_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Show residual</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="show_ps_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Show power spectrum</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="start_recording_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Start recording</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="clean_the_audio_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Denoise</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item>
              <widget class="QFrame" name="frame_10">
               <property name="sizePolicy">
@@ -359,73 +258,6 @@ QPushButton:disabled {
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPushButton" name="restart_btn">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">padding:0px 10px ;
-background-color: rgba(64, 127, 191, 255); /* qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(64, 127, 191, 255), stop:1 rgba(255, 255, 255, 255));*/</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/backward-track.png</normaloff>icons/backward-track.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>16</width>
-                   <height>16</height>
-                  </size>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+R</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="Play_pause_btn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>42</width>
-                   <height>39</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">padding:0px 5px;
-background-color: rgb(64, 127, 191);
-/*background-color: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(64, 127, 191, 255), stop:1 rgba(255, 255, 255, 255));*/</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>icons/pause.png</normaloff>icons/pause.png</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>20</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+P</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="Line" name="line">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
@@ -454,7 +286,7 @@ background-color: rgb(64, 127, 191);
                   </size>
                  </property>
                  <property name="text">
-                  <string>Browse for Noise audio</string>
+                  <string>Import Noise file</string>
                  </property>
                 </widget>
                </item>
@@ -469,7 +301,7 @@ background-color: rgb(64, 127, 191);
                  <property name="styleSheet">
                   <string notr="true">/* ComboBox Main Styling */
 QComboBox {
-    background-color: rgb(191, 200, 187); /*#2c3e50;*/ /* Dark background */
+    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */
     border: 2px solid #34495e; /* Slightly lighter border */
     border-radius: 6px;
     padding: 5px 10px;
@@ -524,6 +356,9 @@ background-color: rgb(191, 200, 187);
                  <property name="editable">
                   <bool>true</bool>
                  </property>
+                 <property name="currentText">
+                  <string>Select Noise audio...</string>
+                 </property>
                  <property name="placeholderText">
                   <string>Select a noise signal</string>
                  </property>
@@ -544,6 +379,32 @@ background-color: rgb(191, 200, 187);
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="start_recording_btn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>39</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Comic Sans MS</family>
+                   <pointsize>8</pointsize>
+                   <weight>75</weight>
+                   <italic>false</italic>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: #f1f1f1;
+font-weight: bold;</string>
+                 </property>
+                 <property name="text">
+                  <string>Start Live recording</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -608,7 +469,7 @@ background-color: rgb(191, 200, 187);
                  <number>5</number>
                 </property>
                 <item>
-                 <widget class="QTreeWidget" name="treeWidget">
+                 <widget class="QTreeWidget" name="signalList_treeWidget">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
                     <horstretch>0</horstretch>
@@ -681,6 +542,9 @@ QTreeWidget QScrollBar::sub-line {
 }
 </string>
                   </property>
+                  <property name="verticalScrollMode">
+                   <enum>QAbstractItemView::ScrollPerPixel</enum>
+                  </property>
                   <attribute name="headerVisible">
                    <bool>false</bool>
                   </attribute>
@@ -706,16 +570,6 @@ QTreeWidget QScrollBar::sub-line {
                     <string/>
                    </property>
                   </column>
-                  <item>
-                   <property name="text">
-                    <string>⏹️     Signal 1</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>⏹️     Signal 2</string>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                </layout>
@@ -727,6 +581,72 @@ QTreeWidget QScrollBar::sub-line {
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <item>
                  <widget class="QTableWidget" name="spectrumViewbox">
+                  <property name="styleSheet">
+                   <string notr="true">QTableWidget {
+    background-color: #121212;
+    alternate-background-color: #1e1e1e;
+    color: #e0e0e0;
+    gridline-color: #2e2e2e;
+    selection-background-color: #3d5afe;
+    selection-color: #ffffff;
+    border: 1px solid #2e2e2e;
+    font-size: 14px;
+}
+
+QHeaderView::section {
+    background-color: #2b2b2b;
+    color: #e0e0e0;
+    padding: 4px;
+    border: 1px solid #3c3c3c;
+    font-weight: bold;
+}
+
+QTableCornerButton::section {
+    background-color: #2b2b2b;
+    border: 1px solid #3c3c3c;
+}
+
+QScrollBar:vertical {
+    background: #1e1e1e;
+    width: 12px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #555;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #888;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #1e1e1e;
+    height: 12px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #555;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #888;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+</string>
+                  </property>
                   <property name="verticalScrollMode">
                    <enum>QAbstractItemView::ScrollPerPixel</enum>
                   </property>
@@ -734,6 +654,9 @@ QTreeWidget QScrollBar::sub-line {
                    <enum>QAbstractItemView::ScrollPerPixel</enum>
                   </property>
                   <attribute name="horizontalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="horizontalHeaderCascadingSectionResizes">
                    <bool>false</bool>
                   </attribute>
                   <attribute name="horizontalHeaderDefaultSectionSize">

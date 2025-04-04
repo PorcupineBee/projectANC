@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout,
 from PyQt5.QtCore import Qt
 from UI.play_soundbox import NoisePlayerThread , BarMovementThread
 import pyaudio
+from PyQt5.QtCore import QThread, pyqtSignal
 
 
 def defaultPlotSettings():
@@ -138,6 +139,10 @@ QDoubleSpinBox::down-arrow {
 QLabel {
     color:#f1f1f1;
 }
+QRadioButton {
+    color:#f1f1f1;
+    font-weight:bold;
+}
 """)
         slider_layout = QHBoxLayout()
         
@@ -165,7 +170,7 @@ QLabel {
         
         # play button
         self.play_button = QPushButton("Play")
-        self.play_button.setStyleSheet("padding:5px; font-size:10px;")
+        self.play_button.setStyleSheet("padding:5px 15px; font-size:10px;")
         self.play_button.clicked.connect(self.play_signal)
         slider_layout.addWidget(self.play_button)
         
@@ -272,7 +277,6 @@ QLabel {
             self.plot_widget.addItem(self.region)
             
         
-from PyQt5.QtCore import QThread, pyqtSignal
 
 import time
 class plySignalinThread(QThread):
