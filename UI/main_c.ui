@@ -131,27 +131,28 @@ QGroupBox:disabled {
         <string notr="true">/* Default Button */
 QPushButton {
 	background-color: rgb(191, 200, 187);
-    color: black; /* */
+    color: #222; /* */
 	border:None;
-  /*  border-bottom: 3px solid rgb(160, 160, 0); 
-    border-right: 3px solid rgb(160, 160, 0);*/
-    border-radius: 5px;
-    padding: 8px 16px;
-    font-size: 14px;
-/*font-weight: bold;*/
+   border-right: 3px solid rgb(0, 170, 127);
+    border-bottom: 3px solid   rgb(85, 85, 127);
+    border-radius: 2px;
+    padding: 0px 16px;
+    font-size: 8pt;
+    font-weight: bold;
 }
 
 /* Hover Effect */
 QPushButton:hover {
-    background-color: rgb(0, 0, 175);  /* Slightly lighter on hover */
+    background-color: rgb(191, 200, 187);  /* Slightly lighter on hover */
     border: None;  /* Blue border */
-    color: white;
+  
 }
 
 /* Pressed Effect */
 QPushButton:pressed {
     background-color: #1f2e3d;  /* Darker shade when pressed */
     border: 2px solid #2980b9;  /* Darker blue border */
+	color: rgb(191, 200, 187);
 }
 
 /* Disabled Button */
@@ -195,7 +196,7 @@ QPushButton:disabled {
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QGroupBox" name="groupBox">
+          <widget class="QFrame" name="frame">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -205,11 +206,8 @@ QPushButton:disabled {
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>100</height>
+             <height>41</height>
             </size>
-           </property>
-           <property name="title">
-            <string>Settings</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <property name="spacing">
@@ -219,13 +217,13 @@ QPushButton:disabled {
              <number>5</number>
             </property>
             <property name="topMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <property name="rightMargin">
              <number>5</number>
             </property>
             <property name="bottomMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <item>
              <widget class="QFrame" name="frame_10">
@@ -258,18 +256,11 @@ QPushButton:disabled {
                 <number>0</number>
                </property>
                <item>
-                <widget class="Line" name="line">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QPushButton" name="add_Audio_btn">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>39</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="text">
@@ -282,7 +273,7 @@ QPushButton:disabled {
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>39</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="text">
@@ -295,7 +286,7 @@ QPushButton:disabled {
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>39</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="styleSheet">
@@ -381,11 +372,11 @@ background-color: rgb(191, 200, 187);
                 </spacer>
                </item>
                <item>
-                <widget class="QRadioButton" name="start_recording_btn">
+                <widget class="QPushButton" name="start_recording_btn">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>39</height>
+                   <height>32</height>
                   </size>
                  </property>
                  <property name="font">
@@ -398,11 +389,34 @@ background-color: rgb(191, 200, 187);
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: #f1f1f1;
-font-weight: bold;</string>
+                  <string notr="true">QPushButton {
+border:None;
+border-left:5px solid rgb(0, 255, 0);
+background-color: rgb(53, 107, 79);
+color:white;
+border-radius:0px;
+}
+QPushButton::hover {
+border-left:5px solid rgb(85, 170, 255);
+background-color: rgb(36, 109, 109);
+
+}
+QPushButton::pressed {
+border-left:5px solid rgb(85, 170, 255);
+background-color: rgb(36, 109, 109);
+
+}
+QPushButton::checked {
+border-left:5px solid rgb(255, 0, 4);
+background-color: rgb(152, 0, 3);
+
+}</string>
                  </property>
                  <property name="text">
                   <string>Start Live recording</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>

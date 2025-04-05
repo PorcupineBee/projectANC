@@ -120,7 +120,7 @@ def setInputSignals(audio_signals:dict, frame):
 from UI.plot_tf_spectrum_static import TimeFrequencyWidget
 def getDefultSpectrumWidget():
     default_settings = dict(
-        audio_data = np.zeros(48*10**4) + 0.25 * np.random.rand(48*10**4),
+        audio_data = np.zeros(48*10**4), # + 0.25 * np.random.rand(48*10**4),
         fs=48*10**3
     )
     _tfwidget = TimeFrequencyWidget(**default_settings)

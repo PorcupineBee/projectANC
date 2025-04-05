@@ -114,27 +114,28 @@ class Ui_ANC_interface(object):
         self.tab.setStyleSheet("/* Default Button */\n"
 "QPushButton {\n"
 "    background-color: rgb(191, 200, 187);\n"
-"    color: black; /* */\n"
+"    color: #222; /* */\n"
 "    border:None;\n"
-"  /*  border-bottom: 3px solid rgb(160, 160, 0); \n"
-"    border-right: 3px solid rgb(160, 160, 0);*/\n"
-"    border-radius: 5px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 14px;\n"
-"/*font-weight: bold;*/\n"
+"   border-right: 3px solid rgb(0, 170, 127);\n"
+"    border-bottom: 3px solid   rgb(85, 85, 127);\n"
+"    border-radius: 2px;\n"
+"    padding: 0px 16px;\n"
+"    font-size: 8pt;\n"
+"    font-weight: bold;\n"
 "}\n"
 "\n"
 "/* Hover Effect */\n"
 "QPushButton:hover {\n"
-"    background-color: rgb(0, 0, 175);  /* Slightly lighter on hover */\n"
+"    background-color: rgb(191, 200, 187);  /* Slightly lighter on hover */\n"
 "    border: None;  /* Blue border */\n"
-"    color: white;\n"
+"  \n"
 "}\n"
 "\n"
 "/* Pressed Effect */\n"
 "QPushButton:pressed {\n"
 "    background-color: #1f2e3d;  /* Darker shade when pressed */\n"
 "    border: 2px solid #2980b9;  /* Darker blue border */\n"
+"    color: rgb(191, 200, 187);\n"
 "}\n"
 "\n"
 "/* Disabled Button */\n"
@@ -152,19 +153,19 @@ class Ui_ANC_interface(object):
         self.splitter = QtWidgets.QSplitter(self.tab)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
-        self.groupBox = QtWidgets.QGroupBox(self.splitter)
+        self.frame = QtWidgets.QFrame(self.splitter)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
-        self.groupBox.setSizePolicy(sizePolicy)
-        self.groupBox.setMaximumSize(QtCore.QSize(16777215, 100))
-        self.groupBox.setObjectName("groupBox")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.groupBox)
-        self.verticalLayout_5.setContentsMargins(5, 5, 5, 5)
+        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
+        self.frame.setSizePolicy(sizePolicy)
+        self.frame.setMaximumSize(QtCore.QSize(16777215, 41))
+        self.frame.setObjectName("frame")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.frame)
+        self.verticalLayout_5.setContentsMargins(5, 0, 5, 0)
         self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.frame_10 = QtWidgets.QFrame(self.groupBox)
+        self.frame_10 = QtWidgets.QFrame(self.frame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -177,21 +178,16 @@ class Ui_ANC_interface(object):
         self.horizontalLayout_3.setContentsMargins(5, 2, 5, 0)
         self.horizontalLayout_3.setSpacing(5)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.line = QtWidgets.QFrame(self.frame_10)
-        self.line.setFrameShape(QtWidgets.QFrame.VLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.horizontalLayout_3.addWidget(self.line)
         self.add_Audio_btn = QtWidgets.QPushButton(self.frame_10)
-        self.add_Audio_btn.setMinimumSize(QtCore.QSize(0, 39))
+        self.add_Audio_btn.setMinimumSize(QtCore.QSize(0, 32))
         self.add_Audio_btn.setObjectName("add_Audio_btn")
         self.horizontalLayout_3.addWidget(self.add_Audio_btn)
         self.browse_noise_audio_btn = QtWidgets.QPushButton(self.frame_10)
-        self.browse_noise_audio_btn.setMinimumSize(QtCore.QSize(0, 39))
+        self.browse_noise_audio_btn.setMinimumSize(QtCore.QSize(0, 32))
         self.browse_noise_audio_btn.setObjectName("browse_noise_audio_btn")
         self.horizontalLayout_3.addWidget(self.browse_noise_audio_btn)
         self.noise_type_comboBox = QtWidgets.QComboBox(self.frame_10)
-        self.noise_type_comboBox.setMinimumSize(QtCore.QSize(0, 39))
+        self.noise_type_comboBox.setMinimumSize(QtCore.QSize(0, 32))
         self.noise_type_comboBox.setStyleSheet("/* ComboBox Main Styling */\n"
 "QComboBox {\n"
 "    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */\n"
@@ -251,8 +247,8 @@ class Ui_ANC_interface(object):
         self.horizontalLayout_3.addWidget(self.noise_type_comboBox)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
-        self.start_recording_btn = QtWidgets.QRadioButton(self.frame_10)
-        self.start_recording_btn.setMinimumSize(QtCore.QSize(0, 39))
+        self.start_recording_btn = QtWidgets.QPushButton(self.frame_10)
+        self.start_recording_btn.setMinimumSize(QtCore.QSize(0, 32))
         font = QtGui.QFont()
         font.setFamily("Comic Sans MS")
         font.setPointSize(8)
@@ -260,8 +256,29 @@ class Ui_ANC_interface(object):
         font.setItalic(False)
         font.setWeight(75)
         self.start_recording_btn.setFont(font)
-        self.start_recording_btn.setStyleSheet("color: #f1f1f1;\n"
-"font-weight: bold;")
+        self.start_recording_btn.setStyleSheet("QPushButton {\n"
+"border:None;\n"
+"border-left:5px solid rgb(0, 255, 0);\n"
+"background-color: rgb(53, 107, 79);\n"
+"color:white;\n"
+"border-radius:0px;\n"
+"}\n"
+"QPushButton::hover {\n"
+"border-left:5px solid rgb(85, 170, 255);\n"
+"background-color: rgb(36, 109, 109);\n"
+"\n"
+"}\n"
+"QPushButton::pressed {\n"
+"border-left:5px solid rgb(85, 170, 255);\n"
+"background-color: rgb(36, 109, 109);\n"
+"\n"
+"}\n"
+"QPushButton::checked {\n"
+"border-left:5px solid rgb(255, 0, 4);\n"
+"background-color: rgb(152, 0, 3);\n"
+"\n"
+"}")
+        self.start_recording_btn.setCheckable(True)
         self.start_recording_btn.setObjectName("start_recording_btn")
         self.horizontalLayout_3.addWidget(self.start_recording_btn)
         self.verticalLayout_5.addWidget(self.frame_10)
@@ -544,7 +561,6 @@ class Ui_ANC_interface(object):
         _translate = QtCore.QCoreApplication.translate
         ANC_interface.setWindowTitle(_translate("ANC_interface", "NoiseShield"))
         self.tabWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>ANC Experiment</p></body></html>"))
-        self.groupBox.setTitle(_translate("ANC_interface", "Settings"))
         self.add_Audio_btn.setText(_translate("ANC_interface", "Import Audio file"))
         self.browse_noise_audio_btn.setText(_translate("ANC_interface", "Import Noise file"))
         self.noise_type_comboBox.setCurrentText(_translate("ANC_interface", "Select Noise audio..."))

@@ -275,8 +275,6 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
 # endregion
 
-    def updateAudioTreeRegistry(self):
-        ...
         
     def addSignalItem(self, name:str, 
                       order, 

@@ -42,7 +42,7 @@ class TimeFrequencyWidget(QWidget):
     font-size: 10px;
     border: 1px solid #555;
     border-radius: 4px;
-    padding: 2px;
+    padding: 2px 15px;
     selection-background-color: #777;
 }
 
@@ -58,13 +58,13 @@ QSpinBox::up-button:hover, QSpinBox::down-button:hover {
 }
 
 QSpinBox::up-arrow {
-    image: url(icons/up_arrow.png); /* Use a custom icon or remove */
+    image: url(UI/icons/up_arrow.png); /* Use a custom icon or remove */
     width: 5px;
     height: 5px;
 }
 
 QSpinBox::down-arrow {
-    image: url(icons/down_arrow.png);
+    image: url(UI/icons/down_arrow.png);
     width: 5px;
     height: 5px;
 }
@@ -82,6 +82,7 @@ QRadioButton{
         # Play/Pause Button
         self.play_pause_btn = QPushButton("play")
         self.play_pause_btn.clicked.connect(self.toggle_playback)
+        self.play_pause_btn.setStyleSheet("padding:5px 15px; font-size:10px;")
         control_layout.addWidget(self.play_pause_btn)
         
         # Spinbox for time window size
@@ -96,6 +97,7 @@ QRadioButton{
         
         self.showSpectogram = QRadioButton(self)
         self.showSpectogram.setText("Show Spectogram")
+        self.showSpectogram.setChecked(True)
         self.showSpectogram.toggled.connect(self.spectogramWidget.showSpectrum)
         control_layout.addWidget(self.showSpectogram)
         
@@ -109,12 +111,13 @@ QRadioButton{
         
         # endregion
         # PyQtGraph Plot Widget
-        # plot_frame = QFrame()
-        # plot_layout = QVBoxLayout()
-        # plot_layout.addWidget(self.spectogramWidget)
-        # plot_frame.setLayout(plot_layout)
+        plot_frame = QFrame()
+        plot_layout = QVBoxLayout()
+        plot_layout.addWidget(self.spectogramWidget)
+        plot_layout.setContentsMargins(0, 5, 0, 0)
+        plot_frame.setLayout(plot_layout)
                 
-        main_layout.addWidget(self.spectogramWidget)
+        main_layout.addWidget(plot_frame)
         
         self.setLayout(main_layout)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -211,7 +214,8 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         self.plot_item.setLabel('bottom', 'Time', units='s')
         
         self.showSpectrum(True)
-        
+        self._audio_data = None
+        self._fs = 0
         self.inf_bar = pg.InfiniteLine(0, movable=True, angle=90)
     
     def showSpectrum(self, flag):
@@ -227,32 +231,30 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             # keep imag item remove curve item
             self.plot_item.setLabel('left', 'Frequency', units='Hz')
             if hasattr(self, "curve"):
-                self.removeItem(self.curve)
+                self.plot_item.removeItem(self.curve)
             self.img = pg.ImageItem()
             self.plot_item.addItem(self.img)
             
             # Add colorbar
-            cm = pg.colormap.getFromMatplotlib('inferno')
             if not hasattr(self, "colorbar"):
                 self.colorbar = pg.ColorBarItem(
                     values=(0, 1), 
-                    colorMap=cm,
-                    label='Power (dB)'
+                    colorMap=pg.colormap.getFromMatplotlib('inferno'),
+                    label='Power (dB)',
+                    width=10
                 )
-            self.colorbar.setImageItem(self.img)
-            self.addItem(self.colorbar)
+                self.addItem(self.colorbar)
+            self.colorbar.setVisible(True)
+            self.colorbar.setImageItem(self.img)            
         else:
             # keep curve item remove image item
             self.plot_item.setLabel('left', 'Amplitude')
-            if hasattr(self, "colorbar"):
-                self.colorbar.setParent(None)
-                self.removeItem(self.colorbar)
-                self.removeItem(self.img)
-                self.colorbar.deleteLater()
-            self.curve = pg.PlotDataItem(
-                pen=pg.mkPen(color='b', width=1)
-            )
-            self.addItem(self.curve)
+            if hasattr(self, "img"):
+                self.colorbar.setVisible(False)
+                self.plot_item.removeItem(self.img)
+            
+        if hasattr(self,"_audio_data") and (self._audio_data is not None):
+            self.update_spectrogram(self._audio_data, self._fs)
             
     def update_spectrogram(self, data, fs):
         """
@@ -262,6 +264,8 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             data: The signal data (1D numpy array)
             fs: Sampling frequency in Hz
         """
+        self._audio_data = data
+        self._fs = fs
         if self.show_spectrum_flag:
             # Compute the spectrogram with parameters optimized for audio
             f, t, Sxx = scipy.signal.spectrogram(data, 
@@ -286,7 +290,8 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             self.colorbar.setLevels((Sxx_db.min(), Sxx_db.max()))
         else:
             TimeStamp = np.linspace(0, round(len(data) / fs, 5), len(data))
-            self.curve.setData(X=TimeStamp, Y=data)
+            self.curve = self.plot_item.plot(TimeStamp[::5], data[::5], 
+                                             pen=pg.mkPen(color='r', width=1))
     
     def play(self):
         position = self.inf_bar.getPos()

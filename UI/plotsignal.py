@@ -110,7 +110,7 @@ class TimeSeriesPlotWidget(QWidget):
     font-size: 10px;
     border: 1px solid #555;
     border-radius: 4px;
-    padding: 2px;
+    padding: 2px 15px;
     selection-background-color: #777;
 }
 
@@ -126,13 +126,13 @@ QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover {
 }
 
 QDoubleSpinBox::up-arrow {
-    image: url(icons/up_arrow.png); /* Use a custom icon or remove */
+    image: url(UI/icons/up_arrow.png); /* Use a custom icon or remove */
     width: 5px;
     height: 5px;
 }
 
 QDoubleSpinBox::down-arrow {
-    image: url(icons/down_arrow.png);
+    image: url(UI/icons/down_arrow.png);
     width: 5px;
     height: 5px;
 }
