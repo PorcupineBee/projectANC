@@ -11,18 +11,24 @@ import numpy as np
 import sounddevice as sd
 from scipy.signal import spectrogram
 from PyQt5.QtCore import QTimer
-from UI.play_soundbox import NoisePlayerThread
-
+from PyQt5.QtCore import QThread, pyqtSignal
+import pyaudio, time
 
 class TimeFrequencyWidget(QWidget):
     def __init__(self, **kwargs):
         super().__init__()
+        chunk_size = kwargs.get("chunk_size", 512)
         self.spectogramWidget = SpectrogramWidget()
         self.initUI()
         
         # some flags
         self.audio_running = False
-        self.Audio_thread = AudioPLayThread()
+        self.Audio_thread = AudioPLayThread(chunk_size=chunk_size)
+        self.Audio_thread.stopProcess.connect(self.stopProcess)
+        self.Audio_thread.restartProcess.connect(self.restartProcess)
+        self.barmoveThread = BarMovementThread(chunk_size=chunk_size)
+        self.barmoveThread.movebar.connect(self.spectogramWidget.move_inf_line)
+        
         
         if (("audio_data" in kwargs.keys()) and 
             ("fs" in kwargs.keys())):
@@ -75,38 +81,43 @@ QRadioButton{
     color:#f1f1f1;
     font-weight:bold;
 }
+QPushButton{
+    padding:6px 20px; 
+    font-size:10px;
+    font-weight:normal;
+}
 """)    
         
-        control_layout = QHBoxLayout()
+        self.control_layout = QHBoxLayout()
         
         # Play/Pause Button
-        self.play_pause_btn = QPushButton("play")
+        self.play_pause_btn = QPushButton("Play")
         self.play_pause_btn.clicked.connect(self.toggle_playback)
-        self.play_pause_btn.setStyleSheet("padding:5px 15px; font-size:10px;")
-        control_layout.addWidget(self.play_pause_btn)
+        # self.play_pause_btn.setStyleSheet()
+        self.control_layout.addWidget(self.play_pause_btn)
         
         # Spinbox for time window size
         label = QLabel(self)
         label.setText("Window size")
-        control_layout.addWidget(label)
+        self.control_layout.addWidget(label)
         
         self.time_window_spinbox = QSpinBox()
         self.time_window_spinbox.setRange(100, 5000)  # Set limits
         self.time_window_spinbox.setValue(1000)  # Default value (ms)
-        control_layout.addWidget(self.time_window_spinbox)
+        self.control_layout.addWidget(self.time_window_spinbox)
         
         self.showSpectogram = QRadioButton(self)
         self.showSpectogram.setText("Show Spectogram")
         self.showSpectogram.setChecked(True)
         self.showSpectogram.toggled.connect(self.spectogramWidget.showSpectrum)
-        control_layout.addWidget(self.showSpectogram)
+        self.control_layout.addWidget(self.showSpectogram)
         
         hspecer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        control_layout.addItem(hspecer)
+        self.control_layout.addItem(hspecer)
         
-        control_layout.setContentsMargins(10, 5, 0, 0)
-        control_layout.setSpacing(10)
-        top_frame.setLayout(control_layout)
+        self.control_layout.setContentsMargins(10, 5, 0, 0)
+        self.control_layout.setSpacing(10)
+        top_frame.setLayout(self.control_layout)
         main_layout.addWidget(top_frame)
         
         # endregion
@@ -129,7 +140,7 @@ QRadioButton{
         # # Data for simulation
         # self.timer = QTimer()
         # self.timer.timeout.connect(self.update_progress)
-        # self.is_playing = False
+        self.is_playing = False # ensures audio is not playing at initialization
         # self.progress_line = pg.InfiniteLine(pos=0, angle=90, pen='r')
         # self.spectogramWidget.addItem(self.progress_line)
         
@@ -146,40 +157,30 @@ QRadioButton{
         # endregion
         
     
-    # def load_audio(self):
-    #     duration = 5  # seconds
-    #     sample_rate = 44100
-    #     t = np.linspace(0, duration, duration * sample_rate, endpoint=False)
-    #     audio_data = 0.5 * np.sin(2 * np.pi * 440 * t)  # Example sine wave
-    #     return audio_data, sample_rate
-    
-    # def compute_spectrogram(self, audio_data, sample_rate):
-    #     f, t, Sxx = spectrogram(audio_data, fs=sample_rate, 
-    #                             window='hamming',
-    #                             noverlap=0.75,
-    #                             detrend='constant',
-    #                             scaling='density',
-    #                             nperseg=None)
-    #     return Sxx, f, t
-    
     def toggle_playback(self):
         if self.is_playing:
-            self.timer.stop()
+            # 
             self.play_pause_btn.setText("Play")
+            self.barmoveThread.pause()
+            self.Audio_thread.pause()
         else:
-            self.timer.start(50)  # Update every 50ms
+            # turned on play of Audio and bar movement 
             self.play_pause_btn.setText("Pause")
-            sd.play(self.audio_data, samplerate=self.sample_rate)
+            self.Audio_thread.s =  self.spectogramWidget.getframelocation()
+            self.barmoveThread.start()
+            self.Audio_thread.start()
+            
+        
         self.is_playing = not self.is_playing
     
-    def update_progress(self):
-        if self.current_time_index < len(self.times) - 1:
-            self.current_time_index += 1
-            self.progress_line.setPos(self.times[self.current_time_index])
-        else:
-            self.timer.stop()
-            self.is_playing = False
-            self.play_pause_btn.setText("Play")
+    # def update_progress(self):
+    #     if self.current_time_index < len(self.times) - 1:
+    #         self.current_time_index += 1
+    #         self.progress_line.setPos(self.times[self.current_time_index])
+    #     else:
+    #         self.timer.stop()
+    #         self.is_playing = False
+    #         self.play_pause_btn.setText("Play")
 
 
             
@@ -189,22 +190,38 @@ QRadioButton{
         # update audio for the thread
         self.Audio_thread.update_Audio(audio_data, fs)
         # update spectogram data
+        self.barmoveThread.dt = fs
         self.spectogramWidget.update_spectrogram(audio_data, fs)
         
         
     def playAudio(self):
         #===== start audio playing and spectogram inf bar animation thread
+        
         self.Audio_thread.start()
         self.audio_running = True
         self.play_pause_btn.setText("Pause")
         
     def stopAudio(self):
         #===== stop audio playing and spectogram inf bar animation thread
-        self.Audio_thread.stop()
+        self.Audio_thread.pause()
         self.audio_running = False
         self.play_pause_btn.setText("Play")
+        
+    def restartProcess(self):
+        self.spectogramWidget.inf_bar.setPos(0)
+        
     
-
+    def stopProcess(self):
+        # if self.pplay
+        self.barmoveThread.pause()
+        self.play_pause_btn.setText("Play")
+        self.spectogramWidget.inf_bar.setPos(0)
+        self.is_playing = False
+        
+    
+    
+        
+        
 class SpectrogramWidget(pg.GraphicsLayoutWidget):
     def __init__(self, parent=None):
         super(SpectrogramWidget, self).__init__(parent)
@@ -216,8 +233,54 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         self.showSpectrum(True)
         self._audio_data = None
         self._fs = 0
-        self.inf_bar = pg.InfiniteLine(0, movable=True, angle=90)
-    
+        self.inf_bar = pg.InfiniteLine(0, movable=True, angle=90, bounds=[0, 1000])
+        self.plot_item.addItem(self.inf_bar)
+        self.inf_bar.setZValue(100)
+        
+        self.livedata = np.array([])
+        self.chunk_size = 512
+        self.time_window_secs = 5  # initial view of 5 seconds
+        self.current_time = 0
+        self.timeline = np.array([])
+        
+
+    def live_update_spectrum(self, data:np.ndarray, fs:float):
+        data = data.flatten()
+        if self.show_spectrum_flag:        
+            f, _t, chunk = scipy.signal.spectrogram(data, 
+                                                    fs=self._fs, 
+                                                    nperseg=512, #2048, 
+                                                    noverlap=0, #0.75, 
+                                                    window='hamming', 
+                                                    scaling='density', 
+                                                    mode='psd')
+            chunk = 10 * np.log10(chunk + 1e-10)  # Add small value to avoid log(0)
+            self.current_time += _t[-1] #self.chunk_size / self._fs
+        else:
+            chunk = data
+            self.timeline = np.append(self.timeline, np.arange(len(data))/self._fs)
+        
+        if len(self.livedata)==0:
+            self.livedata = chunk
+        else:
+            self.livedata = np.hstack((self.livedata, chunk))
+            
+        if self.show_spectrum_flag:        
+            # Update image and scale
+            self.img.setImage(self.livedata.T)
+            tr = QtGui.QTransform()
+            tr.scale(self.current_time/self.livedata.shape[1], (f[-1]-f[0])/self.livedata.shape[0])
+            self.img.setTransform(tr)
+            self.plot_item.setYRange(f[0], f[-1])        
+            self.inf_bar.setPos(self.current_time)
+        else:
+            self.curve= self.plot_item.plot(self.timeline, self.livedata, 
+                                             pen=pg.mkPen(color='r', width=1))
+            self.inf_bar.setPos(self.current_time)
+            raise NotImplemented("Not implemented yet0")
+        self.plot_item.setXRange(self.current_time-self.time_window_secs, self.current_time)
+            
+        
     def showSpectrum(self, flag):
         """
         Toggles the display of a spectrum visualization between an image-based 
@@ -252,7 +315,7 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             if hasattr(self, "img"):
                 self.colorbar.setVisible(False)
                 self.plot_item.removeItem(self.img)
-            
+        
         if hasattr(self,"_audio_data") and (self._audio_data is not None):
             self.update_spectrogram(self._audio_data, self._fs)
             
@@ -292,19 +355,30 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             TimeStamp = np.linspace(0, round(len(data) / fs, 5), len(data))
             self.curve = self.plot_item.plot(TimeStamp[::5], data[::5], 
                                              pen=pg.mkPen(color='r', width=1))
-    
-    def play(self):
-        position = self.inf_bar.getPos()
-        print(position)
-        self.NP_thread.start()
+        
+        self.plot_item.autoRange()
+            
+        
+    def move_inf_line(self, dt):
+        next_step = self.inf_bar.value() + dt
+        self.inf_bar.setPos(next_step)
 
-from PyQt5.QtCore import QThread, pyqtSignal
-import pyaudio, time
+    def getframelocation(self):
+        position = self.inf_bar.getPos()[0]
+        s = int(position * self._fs)
+        return s
+        
 
 class AudioPLayThread(QThread):
     stopProcess = pyqtSignal()
     restartProcess = pyqtSignal()
-    def __init__(self):
+    def __init__(self, chunk_size=512):
+        """THis thread will play the total
+        input audio.
+
+        Args:
+            chunk_size (int, optional): sample delay for process. Defaults to 512.
+        """
         super().__init__()
         self.running = False
         self.process_paused = False
@@ -312,7 +386,7 @@ class AudioPLayThread(QThread):
         self.stream = None
         # self.sample_rate = int(1/time_interval)
         # self.dt = time_interval
-        # self.chunk_size = chunk_size
+        self.chunk_size = chunk_size
         
         # self.music = signal.astype(np.float32)
         
@@ -336,23 +410,84 @@ class AudioPLayThread(QThread):
         self.stream.stop_stream()
         self.stream.close()
         self.quit()
-
-    def update_Audio(self, audio_data, fs=None):
+    
+    def update_Audio(self, audio_data, fs):
         """_summary_
 
         Args:
             audio_data (_type_): _description_
             fs (_type_, optional): _description_. Defaults to None.
         """
-        ...
+        self.music = audio_data.astype(np.float32)
+        self.sample_rate = fs
+    
     def pause(self):
         self.running = False
         self.process_paused = True
+        
     def close(self):
         self.running = False
         self.quit()
         self.wait() 
  
+class BarMovementThread(QThread):
+    movebar = pyqtSignal(float)
+    def __init__(self, chunk_size):
+        super().__init__()
+        self._go = False
+        self.chunk_size = chunk_size
+        self._dt = None # round(time_interval * chunk_size, 4)
+    
+    @property
+    def dt(self):
+        if self._dt is not None:
+            return self._dt
+        else:
+            raise ValueError("Time interval self._dt is not set yet")
+    
+    @dt.setter
+    def dt(self, fs):
+        self._dt= round(self.chunk_size/ fs, 4)
+                       
+    def run(self):     
+        self._go = True
+        while self._go:
+            self.movebar.emit(self.dt)
+            time.sleep(self.dt)
+            
+    def pause(self):
+        self._go = False
+
+    def close(self):
+        self.stop()
+        self.quit()
+        self.wait()
+ 
+
+class EnhancedTimeFrequencyWidget(TimeFrequencyWidget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.denoise_btn = QPushButton(self, text="Enhance Audio")
+        self.denoise_btn.clicked.connect(self.start_denoising_task)
+        self.control_layout.addWidget(self.denoise_btn)
+        
+        self.EnhancerThread = AudioEnhancingThread()
+        self.EnhancerThread.enhanceSignal.connect(self.NoiseEleminationProcess)
+    
+    def start_denoising_task(self):
+        self.EnhancerThread.start()
+        
+    def NoiseEleminationProcess(self):
+        ...
+class AudioEnhancingThread(QThread):
+    enhanceSignal = pyqtSignal() 
+    def __init__(self):
+        super().__init__()
+        
+    def run(self):
+        if self._go:
+            self.enhanceSignal.emit()
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = TimeFrequencyWidget()

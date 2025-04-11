@@ -23,7 +23,7 @@ from UI.play_soundbox import NoisePlayerThread
 from .utiles import (getAudioSignal_n_Time, signal_registry, getDefultSpectrumWidget, getRotatedLabel)
 from functools import partial 
 from UI.plot_tf_spectrum_static import TimeFrequencyWidget 
-
+from src.live_record import RealTimeProcessor
 
 # region Auxillary functions
 def saveNewProject(parent, **kwargs):
@@ -66,19 +66,14 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.project_registry = signal_registry()
         
-        self.start_recording_btn.clicked.connect(self.start_recording_action)
+        self.start_recording_btn.toggled.connect(self.start_recording_action)
         self.add_Audio_btn.clicked.connect(self.add_Audio_action)
         self.browse_noise_audio_btn.clicked.connect(self.browse_noise_audio_action)
         self.noise_type_comboBox.currentIndexChanged.connect(self.noise_type_comboaction)
-        
+        self.select_NCA_comboBox.currentIndexChanged.connect(self.NCAChangedTask)
+        self.Sampling_rate_comboBox.currentIndexChanged.connect(self.samplingRateChangedTask)
         self.extra_ui()
-        self.spectrumViewbox.setRowCount(2) # 1: inp signal spec, 2: op signal spec
-        self.init_spectrum_widgets()
-        # self._temp_add_a_music()
-        self.order_key = dict()
-        
     
 
     def start_recording_action(self, flag):
@@ -89,9 +84,14 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             ...
             # pyaudio functionalities for recording audio
             # as well as update input spectrum frame
+            self.live_recording.start_recording()
+            self.start_recording_btn.setText("Stop recording")
         else:
             # stop that pyaudio functionalities
-            ...
+            self.live_recording.stop_and_save()
+            self.addASignalStremer(stype="signal", audio_file=f"{self.working_dir}/original_voice_record.wav")
+            self.start_recording_btn.setText("Start Live recording")
+            
 
     def add_Audio_action(self):
         """
@@ -102,8 +102,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                         "Audio Files (*.wav *.mp3 *.flac *.ogg *.aac);;All Files (*)", options=options)
 
         if file_path:
-            signal, time = getAudioSignal_n_Time(file_path)   
-            self.addASignalStremer(signal, time, "signal")
+            self.addASignalStremer(stype="signal", audio_file=file_path)
             self.showStatus(file_path, align="right")
 
     def browse_noise_audio_action(self):
@@ -115,8 +114,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                         "Audio Files (*.wav *.mp3 *.flac *.ogg *.aac);;All Files (*)", options=options)
 
         if file_path:
-            signal, time = getAudioSignal_n_Time(file_path)   
-            self.addASignalStremer(signal, time, "Noise")
+            self.addASignalStremer(stype="Noise", audio_file=file_path)
             self.showStatus(file_path, align="right")
         
 
@@ -146,8 +144,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             - Updates the spectrum view box in the UI with the new plot widget.
             - Maintains an order-key mapping for the signal and its associated widget.
         """
-        
-        signal, time, order, signal_key = self.project_registry.add_signal(fpath=audio_file, type=stype)
+        signal, time, order, signal_key = self.project_registry.add_signal(fpath=audio_file, type=stype, _sr=self.SamplingRate)
         
         plotsetting = defaultPlotSettings()
         plotsetting["signal"] = signal
@@ -172,7 +169,16 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         basename = os.path.basename(audio_file)
         self.addSignalItem(basename, order)
         
+    def NCAChangedTask(self, index):
+        """Noise cancellation Algorithm changed
 
+        Args:
+            index (int): 0: Deep filternet based based 
+                         1: Adaptive Filter (AF) based
+                         2: DeepfilterNet + AF based
+        """
+        ...
+        
     def showStatus(self, message:str=None, align="left",**kwargs):
         """
         Displays a status message on the status bar with optional alignment.
@@ -185,19 +191,21 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             - If `align` is "right", the message is set to a status text widget.
         """
         if align=="left":
-            self.statusbar.showMessage(message)
+            self.statusbar.showMessage(message, msecs=5000)
             self.statusbar.setStyleSheet("color: #bbb;padding: 0px 5px; background: None;")
         elif align=="right":
             self.status_text.setText(message)
             
     def extra_ui(self):
         """
-        UI for Right side status 
         """
+        #======== UI for Right side status 
         self.status_text = QLabel("")
         
         self.status_text.setStyleSheet("color: #bbb;padding: 0px 5px; background: None;")
         self.statusbar.addPermanentWidget(self.status_text)
+        
+        #========= strtup interface initialization
         self.startupwind = StartUpInterface(self)
         self.startupwind.show()
         
@@ -207,20 +215,27 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         for key, value in self.noise_file_data.items():
             self.noise_type_comboBox.addItem(value) 
             
-        # two more colums in self.signalList_treeWidget 
-        # for checkbox and delete options
+        #=========== two more colums in self.signalList_treeWidget 
+        # for checkbox and delete options 
         self.signalList_treeWidget.setColumnCount(2)
         self.signalList_treeWidget.setColumnWidth(0, 150)
         self.signalList_treeWidget.setColumnWidth(1, 50)
     
-    def load_project(self, registry:dict):
+    def load_project(self, registry:dict, workingdir):
         """
         load save denoising project
         Args:
             registry (dict): _description_
         """
+        self.project_registry = signal_registry(workingdir)
         self.project_registry.signals_df = registry
-    
+        self.spectrumViewbox.setRowCount(2) # 1: inp signal spec, 2: op signal spec
+        self.order_key = dict()
+        self.SamplingRate = 16000
+        self.init_spectrum_widgets()
+        
+        
+        
     def save_project(self):
         """
         Save this project
@@ -235,17 +250,13 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                 self.showStatus("Error occurred while saving the project", align="left")
     
     def closeEvent(self, a0):
-        for _ , dictobj in self.order_key.items():
-            tsWidget = dictobj["widget"]
-            tsWidget.closeWidget()
-            
+        if hasattr(self, "order_key"):
+            for _ , dictobj in self.order_key.items():
+                tsWidget = dictobj["widget"]
+                tsWidget.closeWidget()
+                
         return super().closeEvent(a0)
     
-    # def _temp_add_a_music(self):
-    #     audio_data_path = "A:/gitclones/EEproject/raw_data/noisy_snr0.wav"
-    #     plot_widget = plot_this_audio_file(audio_data_path)
-    #     self.spectrumViewbox.setRowHeight(0, 200)
-    #     self.spectrumViewbox.setCellWidget(0, 1, plot_widget)
 
     def init_spectrum_widgets(self):
         """
@@ -253,7 +264,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         """
         if not hasattr(self, "static_input_spect_widget"):
             # create default static_input_spect_widget attribute
-            self.static_input_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget()
+            self.static_input_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget(True)
             _label = getRotatedLabel("Input signal", height=300)
             self.spectrumViewbox.setCellWidget(0, 0, _label)
 
@@ -264,7 +275,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
         if not hasattr(self, "static_output_spect_widget"):
             # create default static_input_spect_widget attribute
-            self.static_output_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget()
+            self.static_output_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget(False)
             
             _label = getRotatedLabel("Enhanced signal", height=300)
             self.spectrumViewbox.setCellWidget(1, 0, _label)
@@ -273,8 +284,25 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
             self.addSignalItem("Enhanced Signal", 1, parmanent=True)
         
+        self.live_recording = RealTimeProcessor(
+                    filename_original=f"{self.working_dir}/original_voice_record.wav", 
+                    filename_modified=f"{self.working_dir}/modified_voice_record.wav",
+                    input_spectrum_appender=self.static_input_spect_widget.spectogramWidget.live_update_spectrum,
+                    output_spectrum_appender=self.static_output_spect_widget.spectogramWidget.live_update_spectrum,
+                    blocksize=512)
+        
+        
 # endregion
 
+    def samplingRateChangedTask(self, index):
+        if index==0:
+            self.SamplingRate = 16000
+        elif index==1:
+            self.SamplingRate = 44100
+        elif index==2:
+            self.SamplingRate = 48000
+        
+        self.updateInputAudio()
         
     def addSignalItem(self, name:str, 
                       order, 
@@ -290,6 +318,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             layout = QHBoxLayout(opWidget)
             signal_check = QCheckBox(self)
             signal_check.setChecked(checked)
+            signal_check.toggled.connect(lambda flag, key=self.order_key[order]["name"]: self.dontAddSignal(key, flag))
             layout.addWidget(signal_check)
             
             rem_sgnal = QPushButton(text="x", flat=True)
@@ -301,9 +330,12 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             self.signalList_treeWidget.setItemWidget(treeItem, 1, opWidget)
         
             self.order_key[order].update(treeItem=treeItem)
+            
+            self.updateInputAudio()
         
         
-        
+    def dontAddSignal(self, name, flag):
+        self.project_registry.signals_df[name]["active_flag"] = flag 
         
     def removeSignal(self, signal_key):
         prev_order = self.project_registry.signals_df[signal_key]["order"]
@@ -320,12 +352,11 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             
         self.order_key.pop(len(self.order_key) - 1)
         
-        
-        # self.updateInputAudio()
+        self.updateInputAudio()
         
     def updateInputAudio(self):
-        self.project_registry.signals_df
-        self.static_input_spect_widget.updateAudio()
+        audio = self.project_registry.getTotalSignal(self.SamplingRate)
+        self.static_input_spect_widget.updateAudio(audio, self.SamplingRate)
         
 # region signal plot class 
 def plot_this_audio_file(file:str):
@@ -372,7 +403,7 @@ class StartUpInterface(Ui_NoiseShieldPopUp, QMainWindow):
         self.setupUi(self)
         self.new_project_btn.clicked.connect(self.new_project_action)
         self.open_old_project_btn.clicked.connect(self.open_old_project_action)
-        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
         self.parent = parent
         self.search_recent_projects()
     
@@ -402,7 +433,7 @@ class StartUpInterface(Ui_NoiseShieldPopUp, QMainWindow):
             with open(registry, "r") as f:
                 data = json.load(f)
                 f.close()
-            self.parent.load_project(data)
+            self.parent.load_project(data, folderpath)
             self.close()
 
     def oldPrjNotFound(self, folderpath):

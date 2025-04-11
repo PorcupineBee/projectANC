@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>983</width>
+    <width>1057</width>
     <height>714</height>
    </rect>
   </property>
@@ -161,6 +161,60 @@ QPushButton:disabled {
     color: #7f8c8d;  /* Faded text */
     border: 2px solid #2c3e50;
 }
+/* ComboBox Main Styling */
+QComboBox {
+    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */
+    border: 2px solid #34495e; /* Slightly lighter border */
+    border-radius: 6px;
+    padding: 5px 10px;
+   color: #222; /* Light text */
+    font-size: 14px;
+}
+
+/* Dropdown Arrow */
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QComboBox::down-arrow {
+    image: url(icons/down_arrow_dark.png); /* Replace with actual path if needed */
+    width: 12px;
+    height: 8px;
+}
+
+/* Popup List */
+QComboBox QAbstractItemView {
+    background-color:  rgb(191, 200, 187); /*#2c3e50; *//* Dark background */
+    border: 1px solid #34495e;
+    selection-background-color: rgb(191, 200, 187) ; /*#2980b9;*/ /* Blue highlight for selection */
+    selection-color: rgb(0, 81, 59);
+    padding: 4px;
+}
+
+/* Hover Effect */
+QComboBox:hover {
+    background-color: rgb(191, 200, 187); /*#3b5366*/
+    border: 2px solid #5dade2; /* Blue border */
+}
+
+/* When Pressed */
+QComboBox:pressed, QComboBox:on {
+    background-color: #1f2e3d;
+background-color: rgb(191, 200, 187);
+    border: 2px solid #2980b9;
+}
+
+/* Disabled */
+QComboBox:disabled {
+    background-color: #3a4f5c;
+background-color: rgb(191, 200, 187);
+    color: #7f8c8d;
+    border-color: #2c3e50;
+}
+QLabel {
+color:#f1f1f1;
+}
 </string>
        </property>
        <attribute name="icon">
@@ -263,6 +317,9 @@ QPushButton:disabled {
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Import Noised or clean Audio file from local folder&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Import Audio file</string>
                  </property>
@@ -276,6 +333,9 @@ QPushButton:disabled {
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Import Noise file from local folder&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Import Noise file</string>
                  </property>
@@ -285,64 +345,15 @@ QPushButton:disabled {
                 <widget class="QComboBox" name="noise_type_comboBox">
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
+                   <width>180</width>
                    <height>32</height>
                   </size>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select default noise audio to mix in clean audio file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
-                  <string notr="true">/* ComboBox Main Styling */
-QComboBox {
-    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */
-    border: 2px solid #34495e; /* Slightly lighter border */
-    border-radius: 6px;
-    padding: 5px 10px;
-    color: #ecf0f1; /* Light text */
-   color: #222; /* Light text */
-    font-size: 14px;
-}
-
-/* Dropdown Arrow */
-QComboBox::drop-down {
-    border: none;
-    width: 20px;
-}
-
-QComboBox::down-arrow {
-    image: url(icons/down_arrow_dark.png); /* Replace with actual path if needed */
-    width: 12px;
-    height: 8px;
-}
-
-/* Popup List */
-QComboBox QAbstractItemView {
-    background-color:  rgb(191, 200, 187); /*#2c3e50; *//* Dark background */
-    border: 1px solid #34495e;
-    selection-background-color: rgb(191, 200, 187) ; /*#2980b9;*/ /* Blue highlight for selection */
-    selection-color: white;
-    padding: 4px;
-}
-
-/* Hover Effect */
-QComboBox:hover {
-    background-color: rgb(191, 200, 187); /*#3b5366*/
-    border: 2px solid #5dade2; /* Blue border */
-}
-
-/* When Pressed */
-QComboBox:pressed, QComboBox:on {
-    background-color: #1f2e3d;
-background-color: rgb(191, 200, 187);
-    border: 2px solid #2980b9;
-}
-
-/* Disabled */
-QComboBox:disabled {
-    background-color: #3a4f5c;
-background-color: rgb(191, 200, 187);
-    color: #7f8c8d;
-    border-color: #2c3e50;
-}
-</string>
+                  <string notr="true"/>
                  </property>
                  <property name="editable">
                   <bool>true</bool>
@@ -372,6 +383,87 @@ background-color: rgb(191, 200, 187);
                 </spacer>
                </item>
                <item>
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>NCA  </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="select_NCA_comboBox">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Noise Cancellation Algorithm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="editable">
+                  <bool>false</bool>
+                 </property>
+                 <property name="currentText">
+                  <string>DNN</string>
+                 </property>
+                 <property name="currentIndex">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>DNN</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>AF</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>DNN+AF</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
+                <widget class="Line" name="line">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>SR</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="Sampling_rate_comboBox">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Sampling rate&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>16 kHz</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>44.1 kHz</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>48 kHz</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item>
                 <widget class="QPushButton" name="start_recording_btn">
                  <property name="minimumSize">
                   <size>
@@ -387,6 +479,9 @@ background-color: rgb(191, 200, 187);
                    <italic>false</italic>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;start live audio recording&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">QPushButton {
@@ -496,6 +591,9 @@ background-color: rgb(152, 0, 3);
                     <height>16777215</height>
                    </size>
                   </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;imported Audio tree&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">/* QTreeWidget Background and Borders */
 QTreeWidget {
@@ -595,6 +693,9 @@ QTreeWidget QScrollBar::sub-line {
                <layout class="QVBoxLayout" name="verticalLayout_7">
                 <item>
                  <widget class="QTableWidget" name="spectrumViewbox">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Waveform graphics view area&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">QTableWidget {
     background-color: #121212;

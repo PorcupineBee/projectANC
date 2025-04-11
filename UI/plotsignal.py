@@ -82,7 +82,7 @@ class TimeSeriesPlotWidget(QWidget):
         
         self.signal_info = signal_info
         self.pplay = False
-        self.original_signal = signal/abs(signal).max() # normalizing the signal
+        self.original_signal = signal/np.abs(signal).max() # normalizing the signal
         self.maxamp = 1
         self.time=time
         self.time_interval = time[1] - time[0]
@@ -213,14 +213,15 @@ QRadioButton {
         
         
         # Add moveable infinite line at time = 0
-        self.inf_line = pg.InfiniteLine(pos=0, angle=90, movable=True, pen='b')
+        self.inf_line = pg.InfiniteLine(pos=0, angle=90, movable=True, pen='b', bounds=[self.time[0], self.time[-1]])
         self.plot_widget.addItem(self.inf_line)
         
         # Add moveable rectangular region above the signal
         self.region = pg.LinearRegionItem(orientation=pg.LinearRegionItem.Vertical)
-        self.region.setRegion([0, 10])  # Default position
+        self.region.setRegion([self.time[0], self.time[-1]])  # Default position
         self.region.setBrush(pg.mkBrush((200, 200, 255, 50)))  # Semi-transparent blue
-        self.plot_widget.addItem(self.region)
+        window_radiobox.setChecked(False)
+        
     
     
     def play_signal(self):
@@ -272,9 +273,9 @@ QRadioButton {
 
     def show_hide_window(self, flag):
         if flag:
-            self.plot_widget.removeItem(self.region)
-        else:
             self.plot_widget.addItem(self.region)
+        else:
+            self.plot_widget.removeItem(self.region)
             
         
 

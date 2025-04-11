@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_ANC_interface(object):
     def setupUi(self, ANC_interface):
         ANC_interface.setObjectName("ANC_interface")
-        ANC_interface.resize(983, 714)
+        ANC_interface.resize(1057, 714)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("UI/icons/nsicon-removebg-preview.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         ANC_interface.setWindowIcon(icon)
@@ -144,6 +144,60 @@ class Ui_ANC_interface(object):
 "    color: #7f8c8d;  /* Faded text */\n"
 "    border: 2px solid #2c3e50;\n"
 "}\n"
+"/* ComboBox Main Styling */\n"
+"QComboBox {\n"
+"    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */\n"
+"    border: 2px solid #34495e; /* Slightly lighter border */\n"
+"    border-radius: 6px;\n"
+"    padding: 5px 10px;\n"
+"   color: #222; /* Light text */\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"/* Dropdown Arrow */\n"
+"QComboBox::drop-down {\n"
+"    border: none;\n"
+"    width: 20px;\n"
+"}\n"
+"\n"
+"QComboBox::down-arrow {\n"
+"    image: url(UI/icons/down_arrow_dark.png); /* Replace with actual path if needed */\n"
+"    width: 12px;\n"
+"    height: 8px;\n"
+"}\n"
+"\n"
+"/* Popup List */\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color:  rgb(191, 200, 187); /*#2c3e50; *//* Dark background */\n"
+"    border: 1px solid #34495e;\n"
+"    selection-background-color: rgb(191, 200, 187) ; /*#2980b9;*/ /* Blue highlight for selection */\n"
+"    selection-color: rgb(0, 81, 59);\n"
+"    padding: 4px;\n"
+"}\n"
+"\n"
+"/* Hover Effect */\n"
+"QComboBox:hover {\n"
+"    background-color: rgb(191, 200, 187); /*#3b5366*/\n"
+"    border: 2px solid #5dade2; /* Blue border */\n"
+"}\n"
+"\n"
+"/* When Pressed */\n"
+"QComboBox:pressed, QComboBox:on {\n"
+"    background-color: #1f2e3d;\n"
+"background-color: rgb(191, 200, 187);\n"
+"    border: 2px solid #2980b9;\n"
+"}\n"
+"\n"
+"/* Disabled */\n"
+"QComboBox:disabled {\n"
+"    background-color: #3a4f5c;\n"
+"background-color: rgb(191, 200, 187);\n"
+"    color: #7f8c8d;\n"
+"    border-color: #2c3e50;\n"
+"}\n"
+"QLabel {\n"
+"color:#f1f1f1;\n"
+"}\n"
 "")
         self.tab.setObjectName("tab")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tab)
@@ -187,66 +241,43 @@ class Ui_ANC_interface(object):
         self.browse_noise_audio_btn.setObjectName("browse_noise_audio_btn")
         self.horizontalLayout_3.addWidget(self.browse_noise_audio_btn)
         self.noise_type_comboBox = QtWidgets.QComboBox(self.frame_10)
-        self.noise_type_comboBox.setMinimumSize(QtCore.QSize(0, 32))
-        self.noise_type_comboBox.setStyleSheet("/* ComboBox Main Styling */\n"
-"QComboBox {\n"
-"    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */\n"
-"    border: 2px solid #34495e; /* Slightly lighter border */\n"
-"    border-radius: 6px;\n"
-"    padding: 5px 10px;\n"
-"    color: #ecf0f1; /* Light text */\n"
-"   color: #222; /* Light text */\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"/* Dropdown Arrow */\n"
-"QComboBox::drop-down {\n"
-"    border: none;\n"
-"    width: 20px;\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"    image: url(UI/icons/down_arrow_dark.png); /* Replace with actual path if needed */\n"
-"    width: 12px;\n"
-"    height: 8px;\n"
-"}\n"
-"\n"
-"/* Popup List */\n"
-"QComboBox QAbstractItemView {\n"
-"    background-color:  rgb(191, 200, 187); /*#2c3e50; *//* Dark background */\n"
-"    border: 1px solid #34495e;\n"
-"    selection-background-color: rgb(191, 200, 187) ; /*#2980b9;*/ /* Blue highlight for selection */\n"
-"    selection-color: white;\n"
-"    padding: 4px;\n"
-"}\n"
-"\n"
-"/* Hover Effect */\n"
-"QComboBox:hover {\n"
-"    background-color: rgb(191, 200, 187); /*#3b5366*/\n"
-"    border: 2px solid #5dade2; /* Blue border */\n"
-"}\n"
-"\n"
-"/* When Pressed */\n"
-"QComboBox:pressed, QComboBox:on {\n"
-"    background-color: #1f2e3d;\n"
-"background-color: rgb(191, 200, 187);\n"
-"    border: 2px solid #2980b9;\n"
-"}\n"
-"\n"
-"/* Disabled */\n"
-"QComboBox:disabled {\n"
-"    background-color: #3a4f5c;\n"
-"background-color: rgb(191, 200, 187);\n"
-"    color: #7f8c8d;\n"
-"    border-color: #2c3e50;\n"
-"}\n"
-"")
+        self.noise_type_comboBox.setMinimumSize(QtCore.QSize(180, 32))
+        self.noise_type_comboBox.setStyleSheet("")
         self.noise_type_comboBox.setEditable(True)
         self.noise_type_comboBox.setFrame(True)
         self.noise_type_comboBox.setObjectName("noise_type_comboBox")
         self.horizontalLayout_3.addWidget(self.noise_type_comboBox)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem)
+        self.line_2 = QtWidgets.QFrame(self.frame_10)
+        self.line_2.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_2.setObjectName("line_2")
+        self.horizontalLayout_3.addWidget(self.line_2)
+        self.label = QtWidgets.QLabel(self.frame_10)
+        self.label.setObjectName("label")
+        self.horizontalLayout_3.addWidget(self.label)
+        self.select_NCA_comboBox = QtWidgets.QComboBox(self.frame_10)
+        self.select_NCA_comboBox.setEditable(False)
+        self.select_NCA_comboBox.setObjectName("select_NCA_comboBox")
+        self.select_NCA_comboBox.addItem("")
+        self.select_NCA_comboBox.addItem("")
+        self.select_NCA_comboBox.addItem("")
+        self.horizontalLayout_3.addWidget(self.select_NCA_comboBox)
+        self.line = QtWidgets.QFrame(self.frame_10)
+        self.line.setFrameShape(QtWidgets.QFrame.VLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.horizontalLayout_3.addWidget(self.line)
+        self.label_2 = QtWidgets.QLabel(self.frame_10)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout_3.addWidget(self.label_2)
+        self.Sampling_rate_comboBox = QtWidgets.QComboBox(self.frame_10)
+        self.Sampling_rate_comboBox.setObjectName("Sampling_rate_comboBox")
+        self.Sampling_rate_comboBox.addItem("")
+        self.Sampling_rate_comboBox.addItem("")
+        self.Sampling_rate_comboBox.addItem("")
+        self.horizontalLayout_3.addWidget(self.Sampling_rate_comboBox)
         self.start_recording_btn = QtWidgets.QPushButton(self.frame_10)
         self.start_recording_btn.setMinimumSize(QtCore.QSize(0, 32))
         font = QtGui.QFont()
@@ -555,20 +586,38 @@ class Ui_ANC_interface(object):
 
         self.retranslateUi(ANC_interface)
         self.tabWidget.setCurrentIndex(0)
+        self.select_NCA_comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(ANC_interface)
 
     def retranslateUi(self, ANC_interface):
         _translate = QtCore.QCoreApplication.translate
         ANC_interface.setWindowTitle(_translate("ANC_interface", "NoiseShield"))
         self.tabWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>ANC Experiment</p></body></html>"))
+        self.add_Audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noised or clean Audio file from local folder</span></p></body></html>"))
         self.add_Audio_btn.setText(_translate("ANC_interface", "Import Audio file"))
+        self.browse_noise_audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noise file from local folder</span></p></body></html>"))
         self.browse_noise_audio_btn.setText(_translate("ANC_interface", "Import Noise file"))
+        self.noise_type_comboBox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Select default noise audio to mix in clean audio file</p></body></html>"))
         self.noise_type_comboBox.setCurrentText(_translate("ANC_interface", "Select Noise audio..."))
         self.noise_type_comboBox.setPlaceholderText(_translate("ANC_interface", "Select a noise signal"))
+        self.label.setText(_translate("ANC_interface", "NCA  "))
+        self.select_NCA_comboBox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Select Noise Cancellation Algorithm</p></body></html>"))
+        self.select_NCA_comboBox.setCurrentText(_translate("ANC_interface", "DNN"))
+        self.select_NCA_comboBox.setItemText(0, _translate("ANC_interface", "DNN"))
+        self.select_NCA_comboBox.setItemText(1, _translate("ANC_interface", "AF"))
+        self.select_NCA_comboBox.setItemText(2, _translate("ANC_interface", "DNN+AF"))
+        self.label_2.setText(_translate("ANC_interface", "SR"))
+        self.Sampling_rate_comboBox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Select Sampling rate</p></body></html>"))
+        self.Sampling_rate_comboBox.setItemText(0, _translate("ANC_interface", "16 kHz"))
+        self.Sampling_rate_comboBox.setItemText(1, _translate("ANC_interface", "44.1 kHz"))
+        self.Sampling_rate_comboBox.setItemText(2, _translate("ANC_interface", "48 kHz"))
+        self.start_recording_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">start live audio recording</span></p></body></html>"))
         self.start_recording_btn.setText(_translate("ANC_interface", "Start Live recording"))
         self.groupBox_3.setTitle(_translate("ANC_interface", "Signal Index Tree"))
+        self.signalList_treeWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>imported Audio tree</p></body></html>"))
         self.signalList_treeWidget.headerItem().setText(0, _translate("ANC_interface", "Audio Items"))
         self.groupBox_4.setTitle(_translate("ANC_interface", "Signal waveform viewbox"))
+        self.spectrumViewbox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Waveform graphics view area</p></body></html>"))
         item = self.spectrumViewbox.horizontalHeaderItem(0)
         item.setText(_translate("ANC_interface", "signal profile index"))
         item = self.spectrumViewbox.horizontalHeaderItem(1)
