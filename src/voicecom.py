@@ -8,7 +8,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-SERVER_PORT_FILE = "serverport.txt"
+SERVER_PORT_FILE = "src/serverport.txt"
 # thread class for the server
 class ServerElement(QThread):
      

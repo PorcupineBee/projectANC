@@ -10,7 +10,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 DEFAULT_CHUNK = 512
 DEFAULT_RATE = 16000
-SERVER_PORT_FILE = "serverport.txt"
+SERVER_PORT_FILE = "src/serverport.txt"
 
 # Server thread class
 class ServerAudioThread(QThread):

@@ -24,7 +24,6 @@ from .utiles import (getAudioSignal_n_Time, signal_registry, getDefultSpectrumWi
 from functools import partial 
 from UI.plot_tf_spectrum_static import TimeFrequencyWidget 
 from src.live_record import RealTimeProcessor
-from src.voicecom import ServerElement, ClientElement
 from src.voicecom2 import ServerAudioThread, ClientAudioThread
 import threading
 SERVER_PORT = 1109
@@ -236,11 +235,13 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         if aflag:
             # 1. start server 
             # 2. make server port public via ngrok  
+            self.start_server()
             self.trun_on_server_btn.setText("Trun off Server")
             
         else:
             # 1. stop ngrok 
             # 2. stop server 
+            self.audio_server.stop()
             self.trun_on_server_btn.setText("Trun on Server")
 
     def connect_with_server_task(self, aflag):
@@ -260,6 +261,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         else:
             #====== client sending requenst to server to stop 
             # audio streaming
+            self.audio_client.stop()            
             self.connect_with_server_btn.setText("Connect with server")
         
 
