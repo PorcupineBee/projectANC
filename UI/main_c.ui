@@ -559,7 +559,7 @@ background-color: rgb(152, 0, 3);
                 </size>
                </property>
                <property name="title">
-                <string>Signal Index Tree</string>
+                <string>\ Signal Tree \ Com. settings</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_4">
                 <property name="spacing">
@@ -684,13 +684,288 @@ QTreeWidget QScrollBar::sub-line {
                   </column>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QFrame" name="frame_3">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QLineEdit {
+    background-color: rgb(225, 255, 207);
+	color: rgb(0, 0, 127);
+    border: 2px solid #27ae60; /* Green border */
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    background-color: #ffffff; /* Lighter background when focused */
+    border-color: #2ecc71; 
+}
+QLineEdit:focus {
+    background-color: #ffffff; 
+    border-color: rgb(255, 6, 135);
+}
+
+QLineEdit:disabled {
+    background-color: rgb(166, 199, 166); /* Faded light green for disabled state */
+    border-color: #27ae60; /* Lighter green border */
+    color: rgb(0, 0, 127); /* Faded text color */
+}
+</string>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout">
+                   <property name="leftMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>5</number>
+                   </property>
+                   <property name="spacing">
+                    <number>5</number>
+                   </property>
+                   <item row="0" column="0" colspan="2">
+                    <widget class="Line" name="line_3">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0" colspan="2">
+                    <widget class="QLabel" name="label_3">
+                     <property name="text">
+                      <string>Select communication End</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_4">
+                     <property name="text">
+                      <string>Port number: </string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0" colspan="2">
+                    <widget class="QPushButton" name="connect_with_server_btn">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>31</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+    background-color: #3498db; /* Default color */
+    color: white;
+  border-bottom: 3px solid  #2980b9;
+border-right: 2px solid  #2980b9;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+	font-weight:bold;
+}
+
+QPushButton:hover {
+    background-color: #5dade2; /* Hover color */
+    border: 0px solid #1f618d;
+}
+
+QPushButton:pressed {
+    background-color: #2e86c1; /* Pressed color */
+    border-color: #1b4f72;
+}
+
+QPushButton:disabled {
+    background-color: #bdc3c7;
+    border-color: #95a5a6;
+    color: #7f8c8d;
+}
+
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Connect with server</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLineEdit" name="ngrok_port_lineEdit">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0" colspan="2">
+                    <widget class="QComboBox" name="slct_con_end_comboBox">
+                     <item>
+                      <property name="text">
+                       <string>Sender End</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Receiver End</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="3" column="0" colspan="2">
+                    <widget class="QPushButton" name="trun_on_server_btn">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>31</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+    background-color: #27ae60; /* Default Green */
+    color: white;
+   border-bottom: 3px solid  #219150;
+   border-right: 2px solid  #219150;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2ecc71; /* Lighter Green on Hover */
+    border: 0px solid #1e8449;
+}
+
+QPushButton:pressed {
+    background-color: #1e8449; /* Dark Green when Pressed */
+    border-color: #145a32;
+}
+
+QPushButton:disabled {
+    background-color: #a5d6a7;
+    border-color: #81c784;
+    color: #4e6b4e;
+}
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Trun on Server</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0" colspan="2">
+                    <widget class="QPushButton" name="start_streaming_btn">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>31</height>
+                      </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+    background-color: #27ae60; /* Default Green */
+    color: white;
+  border-bottom: 3px solid  #219150;
+border-right: 2px solid  #219150;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2ecc71; /* Lighter Green on Hover */
+    border: 0px solid #1e8449;
+}
+
+QPushButton:pressed {
+    background-color: #1e8449; /* Dark Green when Pressed */
+    border-color: #145a32;
+}
+
+QPushButton:disabled {
+background-color:  #d6d6d6; /* Default Light Gray */
+    color: #777;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-color: #b0b0b0;
+}
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Start streaming...</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                </layout>
               </widget>
               <widget class="QGroupBox" name="groupBox_4">
                <property name="title">
-                <string>Signal waveform viewbox</string>
+                <string>\ Signal waveform viewbox</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QFrame" name="frame_4">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <widget class="QTableWidget" name="spectrumViewbox">
                   <property name="toolTip">

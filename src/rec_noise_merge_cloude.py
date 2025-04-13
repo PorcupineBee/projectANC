@@ -1,86 +1,11 @@
-import sounddevice as sd
-import soundfile as sf
-import numpy as np
-
-class RealTimeProcessor:
-    def __init__(self,
-                 filename_original="original.wav", 
-                 filename_modified="modified.wav",
-                 samplerate=16000,
-                 input_spectrum_appender=None, 
-                 output_spectrum_appender=None, 
-                 channels=1, blocksize=512):
-        self.samplerate = samplerate
-        self.channels = channels
-        self.blocksize = blocksize
-        self.filename_original = filename_original
-        self.filename_modified = filename_modified
-        self.original_buffer = []
-        self.modified_buffer = []
-        self.stream = None
-        self.is_recording = False
-        self.input_spectrum_appender = input_spectrum_appender
-        self.output_spectrum_appender = output_spectrum_appender
-
-    def processing_function(self, chunk):
-        # Example: apply a simple gain + clipping
-        # processed = chunk * 2.0 +  0.25 * np.random.rand(len(chunk))
-        noise_level = 0.02  # Change this for stronger/weaker noise
-        noise = np.random.normal(0, noise_level, chunk.shape)
-        processed = chunk/np.abs(chunk).max() + noise
-        return np.clip(processed, -1.0, 1.0)
-    
-    def _callback(self, 
-                  indata, 
-                  frames, 
-                  time, 
-                  status):
-        if status:
-            print(f"Status: {status}")
-        if self.is_recording:
-            chunk = indata.copy()
-            self.original_buffer.append(chunk)
-            self.input_spectrum_appender(chunk, self.samplerate)
-            modified_chunk = self.processing_function(chunk)
-            self.modified_buffer.append(modified_chunk)
-            self.output_spectrum_appender(modified_chunk, self.samplerate)
-            
-
-    def start_recording(self):
-        self.original_buffer = []
-        self.modified_buffer = []
-        self.is_recording = True
-        self.stream = sd.InputStream(
-            samplerate=self.samplerate,
-            blocksize=self.blocksize,
-            channels=self.channels,
-            callback=self._callback
-        )
-        self.stream.start()
-        print("Recording started...")
-
-    def stop_and_save(self):
-        self.is_recording = False
-        self.stream.stop()
-        self.stream.close()
-
-        # Stack chunks to form full audio arrays
-        original_audio = np.concatenate(self.original_buffer, axis=0)
-        modified_audio = np.concatenate(self.modified_buffer, axis=0)
-
-        # Save both versions
-        sf.write(self.filename_original, original_audio/np.abs(original_audio).max(), self.samplerate)
-        sf.write(self.filename_modified, modified_audio, self.samplerate)
-
-        print(f"Recording stopped.\nOriginal saved to: {self.filename_original}\nModified saved to: {self.filename_modified}")
-
 import sys
 import queue
 import numpy as np
 import sounddevice as sd
 import torchaudio
 import torch
-from PyQt5 import QtCore
+from PyQt5 import QtWidgets, QtCore
+import pyqtgraph as pg
 
 
 class AudioRecorderThread(QtCore.QThread):
@@ -121,8 +46,7 @@ class AudioRecorderThread(QtCore.QThread):
 
 class NoiseEmitterThread(QtCore.QThread):
     """Thread 2: Noise packet emitter that can add noise on demand"""
-    noise_ready = QtCore.pyqtSignal(np.ndarray)   # this will send the noise block to the process thread
-    # register_noise_signal = QtCore.pyqtSignal(np.ndarray, float)
+    noise_ready = QtCore.pyqtSignal(np.ndarray)
     
     def __init__(self, sample_rate=44100, blocksize=512):
         super().__init__()
@@ -134,8 +58,7 @@ class NoiseEmitterThread(QtCore.QThread):
         self.noise_position = 0
         
     def load_noise_file(self, file_path):
-        """Load a noise file using torchaudio
-        returns offset"""
+        """Load a noise file using torchaudio"""
         try:
             waveform, sr = torchaudio.load(file_path)
             # Convert to mono if it's not
@@ -146,8 +69,7 @@ class NoiseEmitterThread(QtCore.QThread):
             if sr != self.sample_rate:
                 resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
                 waveform = resampler(waveform)
-            
-            # self.register_noise_signal.emit(waveform, self.noise_position)
+                
             self.noise_data = waveform.numpy().flatten()
             self.noise_position = 0
             return True
@@ -252,7 +174,7 @@ class AudioProcessorThread(QtCore.QThread):
                         processed_data = self.process_audio(merged_data)
                         
                         # Emit the processed data for plotting
-                        self.plot_ready.emit(merged_data, processed_data)
+                        self.plot_ready.emit(audio_data, noise_data, processed_data)
                     else:
                         print(f"Shape mismatch: audio {audio_data.shape}, noise {noise_data.shape}")
                 except queue.Empty:
@@ -285,10 +207,139 @@ class AudioProcessorThread(QtCore.QThread):
         self.wait()
 
 
-# Example usage
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        
+        self.setWindowTitle("Audio Processing System")
+        self.setGeometry(100, 100, 1000, 600)
+        
+        # Set up the central widget
+        central_widget = QtWidgets.QWidget()
+        self.setCentralWidget(central_widget)
+        
+        # Create layouts
+        main_layout = QtWidgets.QVBoxLayout(central_widget)
+        control_layout = QtWidgets.QHBoxLayout()
+        
+        # Create control buttons
+        self.start_button = QtWidgets.QPushButton("Start Recording")
+        self.stop_button = QtWidgets.QPushButton("Stop Recording")
+        self.load_noise_button = QtWidgets.QPushButton("Load Noise File")
+        self.toggle_noise_button = QtWidgets.QPushButton("Toggle Noise")
+        
+        # Add buttons to control layout
+        control_layout.addWidget(self.start_button)
+        control_layout.addWidget(self.stop_button)
+        control_layout.addWidget(self.load_noise_button)
+        control_layout.addWidget(self.toggle_noise_button)
+        
+        # Create plots
+        self.plot_widget = pg.GraphicsLayoutWidget()
+        
+        # Add plots for audio, noise, and processed data
+        self.audio_plot = self.plot_widget.addPlot(row=0, col=0, title="Audio Input")
+        self.noise_plot = self.plot_widget.addPlot(row=1, col=0, title="Noise Input")
+        self.processed_plot = self.plot_widget.addPlot(row=2, col=0, title="Processed Output")
+        
+        # Create plot items
+        self.audio_curve = self.audio_plot.plot(pen='g')
+        self.noise_curve = self.noise_plot.plot(pen='r')
+        self.processed_curve = self.processed_plot.plot(pen='b')
+        
+        # Add layouts to main layout
+        main_layout.addLayout(control_layout)
+        main_layout.addWidget(self.plot_widget)
+        
+        # Set up threads
+        self.audio_thread = AudioRecorderThread()
+        self.noise_thread = NoiseEmitterThread()
+        self.processor_thread = AudioProcessorThread()
+        
+        # Connect signals/slots
+        self.start_button.clicked.connect(self.start_recording)
+        self.stop_button.clicked.connect(self.stop_recording)
+        self.load_noise_button.clicked.connect(self.load_noise_file)
+        self.toggle_noise_button.clicked.connect(self.toggle_noise)
+        
+        self.audio_thread.data_ready.connect(self.processor_thread.add_audio_data)
+        self.noise_thread.noise_ready.connect(self.processor_thread.add_noise_data)
+        self.processor_thread.plot_ready.connect(self.update_plots)
+        
+        # Initial state
+        self.stop_button.setEnabled(False)
+        self.toggle_noise_button.setEnabled(False)
+        
+        self.noise_active = False
+        
+    def start_recording(self):
+        """Start all threads"""
+        self.audio_thread.start()
+        self.noise_thread.start()
+        self.processor_thread.start()
+        
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        
+    def stop_recording(self):
+        """Stop all threads"""
+        self.audio_thread.stop()
+        self.noise_thread.stop()
+        self.processor_thread.stop()
+        
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        
+    def load_noise_file(self):
+        """Open a file dialog to select a noise file"""
+        file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self, "Select Noise File", "", "Audio Files (*.wav *.mp3 *.ogg)"
+        )
+        
+        if file_path:
+            success = self.noise_thread.load_noise_file(file_path)
+            if success:
+                self.toggle_noise_button.setEnabled(True)
+                print(f"Loaded noise file: {file_path}")
+            else:
+                QtWidgets.QMessageBox.warning(
+                    self, "Error", "Failed to load noise file."
+                )
+    
+    def toggle_noise(self):
+        """Toggle noise on/off"""
+        self.noise_active = not self.noise_active
+        self.noise_thread.toggle_noise(self.noise_active)
+        
+        if self.noise_active:
+            self.toggle_noise_button.setText("Disable Noise")
+        else:
+            self.toggle_noise_button.setText("Enable Noise")
+    
+    @QtCore.pyqtSlot(np.ndarray, np.ndarray, np.ndarray)
+    def update_plots(self, audio_data, noise_data, processed_data):
+        """Update the plots with new data"""
+        # Extract data for plotting (first channel only)
+        audio_y = audio_data[:, 0]
+        noise_y = noise_data[:, 0]
+        processed_y = processed_data[:, 0]
+        
+        # Create x values
+        x = np.arange(len(audio_y))
+        
+        # Update plots
+        self.audio_curve.setData(x, audio_y)
+        self.noise_curve.setData(x, noise_y)
+        self.processed_curve.setData(x, processed_y)
+    
+    def closeEvent(self, event):
+        """Handle window close event"""
+        self.stop_recording()
+        event.accept()
+
+
 if __name__ == "__main__":
-    processor = RealTimeProcessor()
-    input("Press Enter to start recording...")
-    processor.start_recording()
-    input("Press Enter to stop and save recordings...")
-    processor.stop_and_save()
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

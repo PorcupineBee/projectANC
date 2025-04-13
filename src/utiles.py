@@ -41,7 +41,8 @@ class signal_registry():
     def add_signal(self, 
                    fpath:str, 
                    type:str="audio",
-                   _sr:int=16000)-> tuple[np.ndarray, np.ndarray, int]:
+                   _sr:int=16000,
+                   recorded:bool=False)-> tuple[np.ndarray, np.ndarray, int]:
         """
         Add a signal to the registry
         Parameters:
@@ -59,7 +60,7 @@ class signal_registry():
         signal_key = uuid.uuid4().hex[:6]
         signal_order = self.__len__() - 1
         
-        newfpath, sig, time= copyFile(self._audio_folder, fpath, _sr, method="get") 
+        newfpath, sig, time= copyFile(self._audio_folder, fpath, _sr, method="get", recorded=recorded) 
         
         self.maxsigsize = len(sig) if len(sig) > self.maxsigsize else self.maxsigsize
         
@@ -121,7 +122,7 @@ class signal_registry():
             total_offset = sampleOffset + window_offset if window_offset > 0 else sampleOffset
             right_bound = window_length if window_length < duration else duration
             
-            _res_signal[total_offset: right_bound] += prop["amplitude"] * audio_signal[window_offset:
+            _res_signal[total_offset: total_offset + right_bound] += prop["amplitude"] * audio_signal[window_offset:
                                 min(len(_res_signal)-total_offset, right_bound)]
             
             _res_signal = _res_signal/np.abs(_res_signal).max()
@@ -146,9 +147,9 @@ class signal_registry():
         
         return res_signal        
     
-def copyFile(_audio_folder, audio_file, new_sr=16000, method="save"):
+def copyFile(_audio_folder, audio_file, new_sr=16000, method="save", recorded=False):
     new_file_path =  os.path.join(_audio_folder, os.path.basename(audio_file))
-    if os.path.exists(new_file_path): 
+    if os.path.exists(new_file_path) and not recorded: 
         audio_signal, old_sr = ta.load(new_file_path)
         if old_sr == new_sr:
             if method == "save":

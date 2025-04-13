@@ -168,22 +168,9 @@ QPushButton{
             self.play_pause_btn.setText("Pause")
             self.Audio_thread.s =  self.spectogramWidget.getframelocation()
             self.barmoveThread.start()
-            self.Audio_thread.start()
-            
-        
+            self.Audio_thread.start()    
         self.is_playing = not self.is_playing
     
-    # def update_progress(self):
-    #     if self.current_time_index < len(self.times) - 1:
-    #         self.current_time_index += 1
-    #         self.progress_line.setPos(self.times[self.current_time_index])
-    #     else:
-    #         self.timer.stop()
-    #         self.is_playing = False
-    #         self.play_pause_btn.setText("Play")
-
-
-            
     def updateAudio(self, audio_data, fs):
         if self.audio_running:
             self.stopAudio()
@@ -219,8 +206,22 @@ QPushButton{
         self.is_playing = False
         
     
+    #region LIVE rEC releted
+    def live_rec_widget_stateStatus(self, flag):
+        self.play_pause_btn.setEnabled(flag)
+        self.time_window_spinbox.setEnabled(flag)
+        self.showSpectogram.setEnabled(flag)
+        if flag:
+            self.spectogramWidget.livedata = np.array([])
+            self.spectogramWidget.timeline = np.array([])
+        else:
+            self.spectogramWidget.inf_bar.setPos(0)
+            self.spectogramWidget.plot_item.autoRange()
     
+    def liverec_update(self, data_chunk, sr):
+        self.spectogramWidget.live_update_spectrum(data_chunk, sr)
         
+    #endregion L
         
 class SpectrogramWidget(pg.GraphicsLayoutWidget):
     def __init__(self, parent=None):
@@ -245,6 +246,15 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         
 
     def live_update_spectrum(self, data:np.ndarray, fs:float):
+        """_summary_
+
+        Args:
+            data (np.ndarray): a block of size (BLOCK_SIZE, 1) (BLOCK_SIZE:  512 usually)
+            fs (float): _description_
+
+        Raises:
+            NotImplemented: _description_
+        """
         data = data.flatten()
         if self.show_spectrum_flag:        
             f, _t, chunk = scipy.signal.spectrogram(data, 
@@ -477,8 +487,14 @@ class EnhancedTimeFrequencyWidget(TimeFrequencyWidget):
     def start_denoising_task(self):
         self.EnhancerThread.start()
         
+    def EnhanceThisAudio(self, audio, sr):
+        paudio = audio + np.random.normal(0, 0.02, size=audio.shape)
+        self.updateAudio(paudio, sr)
+        
     def NoiseEleminationProcess(self):
         ...
+        
+        
 class AudioEnhancingThread(QThread):
     enhanceSignal = pyqtSignal() 
     def __init__(self):

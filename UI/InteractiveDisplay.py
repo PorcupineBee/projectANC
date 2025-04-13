@@ -408,10 +408,187 @@ class Ui_ANC_interface(object):
         self.signalList_treeWidget.header().setSortIndicatorShown(False)
         self.signalList_treeWidget.header().setStretchLastSection(False)
         self.verticalLayout_4.addWidget(self.signalList_treeWidget)
+        self.frame_3 = QtWidgets.QFrame(self.groupBox_3)
+        self.frame_3.setEnabled(True)
+        self.frame_3.setStyleSheet("QLineEdit {\n"
+"    background-color: rgb(225, 255, 207);\n"
+"    color: rgb(0, 0, 127);\n"
+"    border: 2px solid #27ae60; /* Green border */\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    background-color: #ffffff; /* Lighter background when focused */\n"
+"    border-color: #2ecc71; \n"
+"}\n"
+"QLineEdit:focus {\n"
+"    background-color: #ffffff; \n"
+"    border-color: rgb(255, 6, 135);\n"
+"}\n"
+"\n"
+"QLineEdit:disabled {\n"
+"    background-color: rgb(166, 199, 166); /* Faded light green for disabled state */\n"
+"    border-color: #27ae60; /* Lighter green border */\n"
+"    color: rgb(0, 0, 127); /* Faded text color */\n"
+"}\n"
+"")
+        self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
+        self.gridLayout = QtWidgets.QGridLayout(self.frame_3)
+        self.gridLayout.setContentsMargins(5, 5, 5, 5)
+        self.gridLayout.setSpacing(5)
+        self.gridLayout.setObjectName("gridLayout")
+        self.line_3 = QtWidgets.QFrame(self.frame_3)
+        self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
+        self.gridLayout.addWidget(self.line_3, 0, 0, 1, 2)
+        self.label_3 = QtWidgets.QLabel(self.frame_3)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 1, 0, 1, 2)
+        self.label_4 = QtWidgets.QLabel(self.frame_3)
+        self.label_4.setObjectName("label_4")
+        self.gridLayout.addWidget(self.label_4, 4, 0, 1, 1)
+        self.connect_with_server_btn = QtWidgets.QPushButton(self.frame_3)
+        self.connect_with_server_btn.setMinimumSize(QtCore.QSize(0, 31))
+        self.connect_with_server_btn.setStyleSheet("QPushButton {\n"
+"    background-color: #3498db; /* Default color */\n"
+"    color: white;\n"
+"  border-bottom: 3px solid  #2980b9;\n"
+"border-right: 2px solid  #2980b9;\n"
+"    border-radius: 3px;\n"
+"    padding: 6px 10px;\n"
+"    font-size: 14px;\n"
+"    font-weight:bold;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #5dade2; /* Hover color */\n"
+"    border: 0px solid #1f618d;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: #2e86c1; /* Pressed color */\n"
+"    border-color: #1b4f72;\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: #bdc3c7;\n"
+"    border-color: #95a5a6;\n"
+"    color: #7f8c8d;\n"
+"}\n"
+"\n"
+"QPushButton::checked {\n"
+"background-color: rgb(255, 135, 137);\n"
+" border-bottom: 3px solid rgb(220, 88, 90);\n"
+" border-right: 2px solid rgb(220, 88, 90);\n"
+"}")
+        self.connect_with_server_btn.setCheckable(True)
+        self.connect_with_server_btn.setChecked(False)
+        self.connect_with_server_btn.setObjectName("connect_with_server_btn")
+        self.gridLayout.addWidget(self.connect_with_server_btn, 5, 0, 1, 2)
+        self.ngrok_port_lineEdit = QtWidgets.QLineEdit(self.frame_3)
+        self.ngrok_port_lineEdit.setEnabled(False)
+        self.ngrok_port_lineEdit.setStyleSheet("")
+        self.ngrok_port_lineEdit.setText("")
+        self.ngrok_port_lineEdit.setReadOnly(True)
+        self.ngrok_port_lineEdit.setObjectName("ngrok_port_lineEdit")
+        self.gridLayout.addWidget(self.ngrok_port_lineEdit, 4, 1, 1, 1)
+        self.slct_con_end_comboBox = QtWidgets.QComboBox(self.frame_3)
+        self.slct_con_end_comboBox.setObjectName("slct_con_end_comboBox")
+        self.slct_con_end_comboBox.addItem("")
+        self.slct_con_end_comboBox.addItem("")
+        self.gridLayout.addWidget(self.slct_con_end_comboBox, 2, 0, 1, 2)
+        self.trun_on_server_btn = QtWidgets.QPushButton(self.frame_3)
+        self.trun_on_server_btn.setMinimumSize(QtCore.QSize(0, 31))
+        self.trun_on_server_btn.setStyleSheet("QPushButton {\n"
+"    background-color: #27ae60; /* Default Green */\n"
+"    color: white;\n"
+"   border-bottom: 3px solid  #219150;\n"
+"   border-right: 2px solid  #219150;\n"
+"    border-radius: 3px;\n"
+"    padding: 6px 10px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #2ecc71; /* Lighter Green on Hover */\n"
+"    border: 0px solid #1e8449;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: #1e8449; /* Dark Green when Pressed */\n"
+"    border-color: #145a32;\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"    background-color: #a5d6a7;\n"
+"    border-color: #81c784;\n"
+"    color: #4e6b4e;\n"
+"}\n"
+"QPushButton::checked {\n"
+"background-color: rgb(255, 135, 137);\n"
+" border-bottom: 3px solid rgb(220, 88, 90);\n"
+" border-right: 2px solid rgb(220, 88, 90);\n"
+"}")
+        self.trun_on_server_btn.setCheckable(True)
+        self.trun_on_server_btn.setObjectName("trun_on_server_btn")
+        self.gridLayout.addWidget(self.trun_on_server_btn, 3, 0, 1, 2)
+        self.start_streaming_btn = QtWidgets.QPushButton(self.frame_3)
+        self.start_streaming_btn.setEnabled(False)
+        self.start_streaming_btn.setMinimumSize(QtCore.QSize(0, 31))
+        self.start_streaming_btn.setStyleSheet("QPushButton {\n"
+"    background-color: #27ae60; /* Default Green */\n"
+"    color: white;\n"
+"  border-bottom: 3px solid  #219150;\n"
+"border-right: 2px solid  #219150;\n"
+"    border-radius: 3px;\n"
+"    padding: 6px 10px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #2ecc71; /* Lighter Green on Hover */\n"
+"    border: 0px solid #1e8449;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: #1e8449; /* Dark Green when Pressed */\n"
+"    border-color: #145a32;\n"
+"}\n"
+"\n"
+"QPushButton:disabled {\n"
+"background-color:  #d6d6d6; /* Default Light Gray */\n"
+"    color: #777;\n"
+"    border-radius: 3px;\n"
+"    padding: 6px 10px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border-color: #b0b0b0;\n"
+"}\n"
+"QPushButton::checked {\n"
+"background-color: rgb(255, 135, 137);\n"
+" border-bottom: 3px solid rgb(220, 88, 90);\n"
+" border-right: 2px solid rgb(220, 88, 90);\n"
+"}")
+        self.start_streaming_btn.setCheckable(True)
+        self.start_streaming_btn.setObjectName("start_streaming_btn")
+        self.gridLayout.addWidget(self.start_streaming_btn, 6, 0, 1, 2)
+        self.verticalLayout_4.addWidget(self.frame_3)
         self.groupBox_4 = QtWidgets.QGroupBox(self.splitter_2)
         self.groupBox_4.setObjectName("groupBox_4")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.groupBox_4)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.frame_4 = QtWidgets.QFrame(self.groupBox_4)
+        self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_4.setObjectName("frame_4")
+        self.verticalLayout_7.addWidget(self.frame_4)
         self.spectrumViewbox = QtWidgets.QTableWidget(self.groupBox_4)
         self.spectrumViewbox.setStyleSheet("QTableWidget {\n"
 "    background-color: #121212;\n"
@@ -613,10 +790,17 @@ class Ui_ANC_interface(object):
         self.Sampling_rate_comboBox.setItemText(2, _translate("ANC_interface", "48 kHz"))
         self.start_recording_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">start live audio recording</span></p></body></html>"))
         self.start_recording_btn.setText(_translate("ANC_interface", "Start Live recording"))
-        self.groupBox_3.setTitle(_translate("ANC_interface", "Signal Index Tree"))
+        self.groupBox_3.setTitle(_translate("ANC_interface", "\\ Signal Tree \\ Com. settings"))
         self.signalList_treeWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>imported Audio tree</p></body></html>"))
         self.signalList_treeWidget.headerItem().setText(0, _translate("ANC_interface", "Audio Items"))
-        self.groupBox_4.setTitle(_translate("ANC_interface", "Signal waveform viewbox"))
+        self.label_3.setText(_translate("ANC_interface", "Select communication End"))
+        self.label_4.setText(_translate("ANC_interface", "Port number: "))
+        self.connect_with_server_btn.setText(_translate("ANC_interface", "Connect with server"))
+        self.slct_con_end_comboBox.setItemText(0, _translate("ANC_interface", "Sender End"))
+        self.slct_con_end_comboBox.setItemText(1, _translate("ANC_interface", "Receiver End"))
+        self.trun_on_server_btn.setText(_translate("ANC_interface", "Trun on Server"))
+        self.start_streaming_btn.setText(_translate("ANC_interface", "Start streaming..."))
+        self.groupBox_4.setTitle(_translate("ANC_interface", "\\ Signal waveform viewbox"))
         self.spectrumViewbox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Waveform graphics view area</p></body></html>"))
         item = self.spectrumViewbox.horizontalHeaderItem(0)
         item.setText(_translate("ANC_interface", "signal profile index"))

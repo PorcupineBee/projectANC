@@ -35,6 +35,7 @@ def defaultPlotSettings():
         time=None,
         signal_info=dict(
             type='noise',
+            name='',
             amp_factor=1,
             offset=0
         )
@@ -43,6 +44,7 @@ def defaultPlotSettings():
 class TimeSeriesPlotWidget(QWidget):
     def __init__(self, 
                 #  parent, 
+                update_setting_slot,
                 title,
                 timelimit,
                 x_axis_label,
@@ -84,7 +86,7 @@ class TimeSeriesPlotWidget(QWidget):
         self.pplay = False
         self.original_signal = signal/np.abs(signal).max() # normalizing the signal
         self.maxamp = 1
-        self.time=time
+        self.time_original:np.ndarray=time
         self.time_interval = time[1] - time[0]
         # self.p = pyaudio.PyAudio()
         self.stream = None
@@ -97,6 +99,7 @@ class TimeSeriesPlotWidget(QWidget):
         self.NP_thread.restartProcess.connect(self.restartProcess)
         self.barmoveThread = BarMovementThread(time_interval=self.time_interval, chunk_size=512)
         self.barmoveThread.movebar.connect(self.move_inf_line)
+        self.update_setting_slot = update_setting_slot
         self.initUI()
         
     def initUI(self):
@@ -175,9 +178,9 @@ QRadioButton {
         slider_layout.addWidget(self.play_button)
         
         # show window
-        window_radiobox = QRadioButton("Show Window")
-        window_radiobox.toggled.connect(self.show_hide_window)
-        slider_layout.addWidget(window_radiobox)
+        self.window_radiobox = QRadioButton("Show Window")
+        self.window_radiobox.toggled.connect(self.show_hide_window)
+        slider_layout.addWidget(self.window_radiobox)
          
         spacerItem1 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         slider_layout.addItem(spacerItem1)
@@ -208,10 +211,10 @@ QRadioButton {
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
         
-        self.plot_widget.plot(self.time, 
+        self.plot_widget.plot(self.time_original, 
                               self.signal_info["amp_factor"] * self.original_signal, pen='r')
         
-        
+        self.time =  self.time_original.copy()
         # Add moveable infinite line at time = 0
         self.inf_line = pg.InfiniteLine(pos=0, angle=90, movable=True, pen='b', bounds=[self.time[0], self.time[-1]])
         self.plot_widget.addItem(self.inf_line)
@@ -220,7 +223,7 @@ QRadioButton {
         self.region = pg.LinearRegionItem(orientation=pg.LinearRegionItem.Vertical)
         self.region.setRegion([self.time[0], self.time[-1]])  # Default position
         self.region.setBrush(pg.mkBrush((200, 200, 255, 50)))  # Semi-transparent blue
-        window_radiobox.setChecked(False)
+        self.window_radiobox.setChecked(False)
         
     
     
@@ -242,14 +245,14 @@ QRadioButton {
         self.inf_line.setPos(next_step)
         
     def restartProcess(self):
-        self.inf_line.setPos(0)
+        self.inf_line.setPos(self.time[0])
         
     
     def stopProcess(self):
         # if self.pplay
         self.barmoveThread.pause()
         self.play_button.setText("Play")
-        self.inf_line.setPos(0)
+        self.inf_line.setPos(self.time[0])
         self.pplay = True
         
         
@@ -261,15 +264,19 @@ QRadioButton {
         self.signal_info["offset"] = self.shift_slider.value()
                 
         # Apply amplitude scaling and time offset shifting
-        shifted_time = self.time + self.signal_info["offset"]
-        
+        self.time = self.time_original + self.signal_info["offset"]
         self.plot_widget.clear()
-        self.plot_widget.plot(shifted_time, 
+        self.plot_widget.plot(self.time, 
                               self.signal_info["amp_factor"] * self.original_signal/self.maxamp, pen='r')
         
         # Re-add infinite line and region after clearing plot
         self.plot_widget.addItem(self.inf_line)
-        self.plot_widget.addItem(self.region)
+        if self.window_radiobox.isChecked():
+            self.plot_widget.addItem(self.region)
+        
+        self.inf_line.setPos(self.time[0])
+        self.inf_line.setBounds([self.time[0], self.time[-1]])
+        self.update_setting_slot(self.signal_info)
 
     def show_hide_window(self, flag):
         if flag:
