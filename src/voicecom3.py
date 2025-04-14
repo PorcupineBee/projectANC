@@ -27,7 +27,11 @@ class ServerAudioThread(QThread):
         self.conn = None
         self.server = None
         self._port = self._read_port_from_file()
-    
+        
+        self._go = True
+        self.start_stream = False
+        self.connection_status = False 
+        
     def _read_port_from_file(self):
         try:
             with open(SERVER_PORT_FILE, "r") as f:
@@ -41,62 +45,81 @@ class ServerAudioThread(QThread):
             print(f"Error reading port: {e}")
             return None
     
-    def start_server(self):
-        """Initialize server socket and wait for client connection"""
-        try:
-            self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.server.bind((self.host, self._port))
-            self.server.listen(5)
+    # region 
+    # def start_server(self):
+    #     """Initialize server socket and wait for client connection"""
+    #     try:
+    #         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #         self.server.bind((self.host, self._port))
+    #         self.server.listen(5)
             
-            print(f"Server listening on port {self._port}")
-            self.conn, self.address = self.server.accept()
-            print(f"Connection from {self.address}")
+    #         print(f"Server listening on port {self._port}")
+    #         self.conn, self.address = self.server.accept()
+    #         print(f"Connection from {self.address}")
             
-            # Wait for client's confirmation code
-            response = self.conn.recv(self.CHUNK)
-            if response and response.decode() == "1":
-                print("Connection established, ready to stream")
-                self.connection_established.emit()
-                self.conn.sendall("ACK".encode('utf-8'))
-                return True
-            return False
-        except Exception as e:
-            print(f"Server error: {e}")
-            return False
+    #         # Wait for client's confirmation code
+    #         response = self.conn.recv(self.CHUNK)
+    #         if response and response.decode() == "1":
+    #             print("Connection established, ready to stream")
+    #             self.connection_established.emit()
+    #             self.conn.sendall("ACK".encode('utf-8'))
+    #             return True
+    #         return False
+    #     except Exception as e:
+    #         print(f"Server error: {e}")
+    #         return False
+    # endregion
     
+    def trun_on_streaming(self):
+        self.start_stream = True
+        self.send_one_time = True  # make it outside
+        
+    def trun_off_streaming(self):
+        self.start_stream = False
+        
+    def trun_off_connection(self):
+        self._go = False
+        
     def run(self):
-        """Start streaming audio to client"""
-        # try:
-        for i in range(5):
-            message = f"Hello from Colab! Message #{i+1}"
-            print(f"Sending: {message}")
-            self.conn.send(message.encode('utf-8'))
-            
-            # Receive response
-            response = self.conn.recv(1024).decode('utf-8')
-            print(f"Received: {response}")
-            
-            time.sleep(1)
-            
-        # audio = pyaudio.PyAudio()
-        # stream = audio.open(format=FORMAT, channels=CHANNELS, 
-        #                     rate=self.RATE, input=True, 
-        #                     frames_per_buffer=self.CHUNK)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind((self.host, self._port))
+        self.server.listen(5)
         
-        # self.running = True
-        # while self.running:
-        #     data = stream.read(self.CHUNK, exception_on_overflow=False)
-        #     if self.conn:
-        #         self.conn.sendall(data)
+        print(f"Server listening on port {self._port}")
+        self.conn, self.address = self.server.accept()
+        print(f"Connection from {self.address}")
         
-        # Clean up
-        # stream.stop_stream()
-        # stream.close()
-        # audio.terminate()
-        # except Exception as e:
-        #     print(f"Error in server audio streaming: {e}")
-        # finally:
-        #     self.stop()
+       
+        
+        audio = pyaudio.PyAudio()
+        stream = audio.open(format=FORMAT, channels=CHANNELS, 
+                            rate=self.RATE, input=True, 
+                            frames_per_buffer=self.CHUNK)
+        try:
+            while self._go:
+                if not self.connection_status:
+                    response = self.conn.recv(self.CHUNK)
+                    if response and response.decode() == "1":
+                        print("Connection established, ready to stream")
+                    self.connection_status = True
+                
+                
+                if self.start_stream:
+                    if self.send_one_time:
+                        self.conn.sendall("ACK".encode('utf-8'))
+                        self.send_one_time = False
+                    data = stream.read(self.CHUNK, exception_on_overflow=False)
+                    if self.conn:
+                        self.conn.sendall(data)
+                    
+                    # Clean up
+                    stream.stop_stream()
+                    stream.close()
+                    audio.terminate()
+        except Exception as e:
+            print(f"Error in server audio streaming: {e}")
+        finally:
+            self.stop()
     
     def stop(self):
         """Stop streaming and close connections"""
@@ -125,7 +148,11 @@ class ClientAudioThread(QThread):
         self.running = False
         self.client = None
         self.audio_buffer = bytearray()
-    
+        
+        self._go = True
+        self.connection_status = False
+        self.streaming_started = False
+        
     def connect_to_server(self, port):
         """Connect to server and send confirmation code"""
         try:
@@ -146,18 +173,35 @@ class ClientAudioThread(QThread):
             print(f"Connection failed: {e}")
             return False
     
+    def setPort(self, port):
+        self._port = port
+    
     def run(self):
         """Receive and process audio stream from server"""
-        try:
-            audio = pyaudio.PyAudio()
-            stream = audio.open(format=FORMAT, channels=CHANNELS, 
-                                rate=self.RATE, output=True, 
-                                frames_per_buffer=self.CHUNK)
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect((self.host, self._port))
+        print(f"Connected to server at {self.host}:{self._port}")
+        
+        audio = pyaudio.PyAudio()
+        stream = audio.open(format=FORMAT, channels=CHANNELS, 
+                            rate=self.RATE, output=True, 
+                            frames_per_buffer=self.CHUNK)
+        
+        # self.running = True
+        
+        self.audio_buffer = bytearray()
+        while self._go:
+            # Send confirmation code
+            if not self.connection_status :
+                self.client.send("1".encode('utf-8'))
+                self.connection_status = True
             
-            self.running = True
-            self.audio_buffer = bytearray()
             
-            while self.running:
+            if not self.streaming_started:
+                response = self.client.recv(self.CHUNK).decode('utf-8')
+                if response == "ACK":
+                    self.streaming_started = True                
+            else:
                 data = self.client.recv(self.CHUNK)
                 if not data:
                     break
@@ -169,14 +213,12 @@ class ClientAudioThread(QThread):
                 self.audio_buffer.extend(data)
                 self.audio_received.emit(data)
             
-            # Clean up
+            
             stream.stop_stream()
             stream.close()
             audio.terminate()
-        except Exception as e:
-            print(f"Error in client audio reception: {e}")
-        finally:
-            self.stop()
+                
+        
     
     def save_audio(self, filename="received_audio.wav"):
         """Save received audio to a WAV file"""

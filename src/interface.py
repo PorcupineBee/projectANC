@@ -24,7 +24,7 @@ from .utiles import (getAudioSignal_n_Time, signal_registry, getDefultSpectrumWi
 from functools import partial 
 from UI.plot_tf_spectrum_static import TimeFrequencyWidget 
 from src.live_record import RealTimeProcessor
-from src.voicecom2 import ServerAudioThread, ClientAudioThread
+from src.voicecom3 import ServerAudioThread, ClientAudioThread
 import threading
 SERVER_PORT = 1109
 
