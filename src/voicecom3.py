@@ -101,6 +101,7 @@ class ServerAudioThread(QThread):
                     response = self.conn.recv(self.CHUNK)
                     if response and response.decode() == "1":
                         print("Connection established, ready to stream")
+                        self.connection_established.emit()
                     self.connection_status = True
                 
                 
@@ -123,7 +124,9 @@ class ServerAudioThread(QThread):
     
     def stop(self):
         """Stop streaming and close connections"""
-        self.running = False
+        # self.running = False
+        self._go = False
+        
         if self.conn:
             try:
                 self.conn.close()
@@ -200,6 +203,7 @@ class ClientAudioThread(QThread):
             if not self.streaming_started:
                 response = self.client.recv(self.CHUNK).decode('utf-8')
                 if response == "ACK":
+                    self.connection_established.emit()
                     self.streaming_started = True                
             else:
                 data = self.client.recv(self.CHUNK)
@@ -208,7 +212,7 @@ class ClientAudioThread(QThread):
                 
                 # Play the audio
                 stream.write(data)
-                
+                print("got some chunk")
                 # Store the audio data
                 self.audio_buffer.extend(data)
                 self.audio_received.emit(data)
@@ -238,7 +242,8 @@ class ClientAudioThread(QThread):
     
     def stop(self):
         """Stop receiving and close connection"""
-        self.running = False
+        # self.running = False
+        self._go = False
         if self.client:
             try:
                 self.client.close()

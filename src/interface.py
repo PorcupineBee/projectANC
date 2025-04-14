@@ -235,7 +235,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         if aflag:
             # 1. start server 
             # 2. make server port public via ngrok  
-            self.start_server()
+            # self.start_server()
+            self.audio_server.start()
             self.trun_on_server_btn.setText("Trun off Server")
             
         else:
@@ -252,7 +253,12 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             ngrok_port = self.ngrok_port_lineEdit.text()
             if bool(re.fullmatch(r"\d+", ngrok_port)):
                 ngrok_port = int(ngrok_port)
-                self.connect_to_server(ngrok_port)
+                
+                # NOTE new voicecom3
+                self.audio_client.setPort(ngrok_port)
+                self.audio_client.start()
+                
+                # self.connect_to_server(ngrok_port)
                 self.connect_with_server_btn.setText("Disconnect with server")
             else:
                 self.connect_with_server_btn.setChecked(False)
@@ -271,12 +277,14 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             # record user audio 
             # write in buffer
             # send buffer to client
-            self.audio_server.start()
+            # self.audio_server.start()
+            self.audio_server.trun_on_streaming()
             self.start_streaming_btn.setText("Stop streaming...")
             
         else:
             # stop record and write audio buffer thread
-            self.audio_server.stop()
+            # self.audio_server.stop()
+            self.audio_server.trun_off_streaming()
             self.start_streaming_btn.setText("Start streaming...")
         
         
