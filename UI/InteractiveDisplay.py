@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'main_c.ui'
+# Form implementation generated from reading ui file 'main_c2.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -25,63 +25,15 @@ class Ui_ANC_interface(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.widget = QtWidgets.QWidget(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Comic Sans MS")
         font.setPointSize(8)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
-        self.tabWidget.setFont(font)
-        self.tabWidget.setStyleSheet("/* Tab Widget Background */\n"
-"QTabWidget::pane {\n"
-"    background: #1e272e; /* Dark background for tab content */\n"
-"    border-radius: 6px;\n"
-"}\n"
-"\n"
-"/* Tab Bar */\n"
-"QTabBar::tab {\n"
-"    background: #aaa; /* Dark gray tab background */\n"
-"    color: #aaa; /* Light text color */\n"
-"    border: 1px solid #555; /* Darker border */\n"
-"    padding: -5px 5px 10px 5px;\n"
-"    margin: 0px;\n"
-"}\n"
-"\n"
-"/* Selected (Active) Tab */\n"
-"QTabBar::tab:selected {\n"
-"  background: #f1f1ff ;\n"
-"    /*background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */\n"
-"    color: #999;\n"
-"   /* border: 2px solid #fafa98;*/\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"/* Hover Effect */\n"
-"QTabBar::tab:hover {\n"
-"    background: #fff; /* Lighter blue when hovering */\n"
-"/*background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(255, 255, 127, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */\n"
-"    /*border: 1px solid black;*/\n"
-"}\n"
-"\n"
-"/* Inactive Tabs */\n"
-"QTabBar::tab:!selected {\n"
-"background: rgb(208, 221, 204); /* Dark gray */\n"
-"/*    background: qlineargradient(spread:pad, x1:0.339, y1:0.767045, x2:1, y2:0, stop:0 rgba(80, 100, 80, 255), stop:1 rgba(255, 255, 255, 255)); /* Blue for active tab */\n"
-"    color: #bdc3c7; /* Light gray text */\n"
-"}\n"
-"\n"
-"/* Disabled Tabs */\n"
-"QTabBar::tab:disabled {\n"
-"    color: #7f8c8d; /* Faded text */\n"
-"    background: #3a4f5c;\n"
-"    border-color: #2c3e50;\n"
-"}\n"
-"QTabWidget::tab-bar {\n"
-"    alignment: left; /* Aligns the tab bar to the center */\n"
-"}\n"
-"\n"
-"/*Group boxes*/\n"
+        self.widget.setFont(font)
+        self.widget.setStyleSheet("/*Group boxes*/\n"
 "/* GroupBox Main Styling */\n"
 "QGroupBox {\n"
 "    border: 2px solid #777; /*rgb(255, 255, 127);*/ /* Slightly lighter border */\n"
@@ -106,12 +58,8 @@ class Ui_ANC_interface(object):
 "    border-color: #3a4f5c;\n"
 "}\n"
 "\n"
-"")
-        self.tabWidget.setTabPosition(QtWidgets.QTabWidget.West)
-        self.tabWidget.setIconSize(QtCore.QSize(20, 30))
-        self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setStyleSheet("/* Default Button */\n"
+"/* Default Button */\n"
+"\n"
 "QPushButton {\n"
 "    background-color: rgb(191, 200, 187);\n"
 "    color: #222; /* */\n"
@@ -199,12 +147,12 @@ class Ui_ANC_interface(object):
 "color:#f1f1f1;\n"
 "}\n"
 "")
-        self.tab.setObjectName("tab")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.tab)
+        self.widget.setObjectName("widget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout_2.setContentsMargins(5, 5, 5, 5)
         self.verticalLayout_2.setSpacing(5)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.splitter = QtWidgets.QSplitter(self.tab)
+        self.splitter = QtWidgets.QSplitter(self.widget)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.setObjectName("splitter")
         self.frame = QtWidgets.QFrame(self.splitter)
@@ -582,14 +530,108 @@ class Ui_ANC_interface(object):
         self.verticalLayout_4.addWidget(self.frame_3)
         self.groupBox_4 = QtWidgets.QGroupBox(self.splitter_2)
         self.groupBox_4.setObjectName("groupBox_4")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.groupBox_4)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.frame_4 = QtWidgets.QFrame(self.groupBox_4)
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_4)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.splitter_3 = QtWidgets.QSplitter(self.groupBox_4)
+        self.splitter_3.setOrientation(QtCore.Qt.Vertical)
+        self.splitter_3.setObjectName("splitter_3")
+        self.frame_4 = QtWidgets.QFrame(self.splitter_3)
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_4.setObjectName("frame_4")
-        self.verticalLayout_7.addWidget(self.frame_4)
-        self.spectrumViewbox = QtWidgets.QTableWidget(self.groupBox_4)
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.frame_4)
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.spectrumINOUT_Viewbox = QtWidgets.QTableWidget(self.frame_4)
+        self.spectrumINOUT_Viewbox.setStyleSheet("QTableWidget {\n"
+"    background-color: #121212;\n"
+"    alternate-background-color: #1e1e1e;\n"
+"    color: #e0e0e0;\n"
+"    gridline-color: #2e2e2e;\n"
+"    selection-background-color: #3d5afe;\n"
+"    selection-color: #ffffff;\n"
+"    border: 1px solid #2e2e2e;\n"
+"    font-size: 14px;\n"
+"}\n"
+"\n"
+"QHeaderView::section {\n"
+"    background-color: #2b2b2b;\n"
+"    color: #e0e0e0;\n"
+"    padding: 4px;\n"
+"    border: 1px solid #3c3c3c;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QTableCornerButton::section {\n"
+"    background-color: #2b2b2b;\n"
+"    border: 1px solid #3c3c3c;\n"
+"}\n"
+"\n"
+"QScrollBar:vertical {\n"
+"    background: #1e1e1e;\n"
+"    width: 12px;\n"
+"    margin: 0px 0px 0px 0px;\n"
+"}\n"
+"\n"
+"QScrollBar::handle:vertical {\n"
+"    background: #555;\n"
+"    min-height: 20px;\n"
+"    border-radius: 6px;\n"
+"}\n"
+"\n"
+"QScrollBar::handle:vertical:hover {\n"
+"    background: #888;\n"
+"}\n"
+"\n"
+"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
+"    height: 0px;\n"
+"}\n"
+"\n"
+"QScrollBar:horizontal {\n"
+"    background: #1e1e1e;\n"
+"    height: 12px;\n"
+"    margin: 0px 0px 0px 0px;\n"
+"}\n"
+"\n"
+"QScrollBar::handle:horizontal {\n"
+"    background: #555;\n"
+"    min-width: 20px;\n"
+"    border-radius: 6px;\n"
+"}\n"
+"\n"
+"QScrollBar::handle:horizontal:hover {\n"
+"    background: #888;\n"
+"}\n"
+"\n"
+"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
+"    width: 0px;\n"
+"}\n"
+"")
+        self.spectrumINOUT_Viewbox.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.spectrumINOUT_Viewbox.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.spectrumINOUT_Viewbox.setObjectName("spectrumINOUT_Viewbox")
+        self.spectrumINOUT_Viewbox.setColumnCount(2)
+        self.spectrumINOUT_Viewbox.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.spectrumINOUT_Viewbox.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.spectrumINOUT_Viewbox.setHorizontalHeaderItem(1, item)
+        self.spectrumINOUT_Viewbox.horizontalHeader().setVisible(False)
+        self.spectrumINOUT_Viewbox.horizontalHeader().setCascadingSectionResizes(False)
+        self.spectrumINOUT_Viewbox.horizontalHeader().setDefaultSectionSize(52)
+        self.spectrumINOUT_Viewbox.horizontalHeader().setStretchLastSection(True)
+        self.spectrumINOUT_Viewbox.verticalHeader().setCascadingSectionResizes(True)
+        self.verticalLayout_7.addWidget(self.spectrumINOUT_Viewbox)
+        self.frame_5 = QtWidgets.QFrame(self.splitter_3)
+        self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_5.setObjectName("frame_5")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.frame_5)
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_6.setSpacing(0)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        self.spectrumViewbox = QtWidgets.QTableWidget(self.frame_5)
         self.spectrumViewbox.setStyleSheet("QTableWidget {\n"
 "    background-color: #121212;\n"
 "    alternate-background-color: #1e1e1e;\n"
@@ -668,88 +710,11 @@ class Ui_ANC_interface(object):
         self.spectrumViewbox.horizontalHeader().setDefaultSectionSize(52)
         self.spectrumViewbox.horizontalHeader().setStretchLastSection(True)
         self.spectrumViewbox.verticalHeader().setCascadingSectionResizes(True)
-        self.verticalLayout_7.addWidget(self.spectrumViewbox)
+        self.verticalLayout_6.addWidget(self.spectrumViewbox)
+        self.verticalLayout_3.addWidget(self.splitter_3)
         self.horizontalLayout.addWidget(self.splitter_2)
         self.verticalLayout_2.addWidget(self.splitter)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("UI/icons/analysis_9828989.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon1.addPixmap(QtGui.QPixmap("UI/icons/analysis_9828873.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        icon1.addPixmap(QtGui.QPixmap("UI/icons/analysis_9828989.png"), QtGui.QIcon.Disabled, QtGui.QIcon.Off)
-        self.tabWidget.addTab(self.tab, icon1, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.tab_2)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.groupBox_5 = QtWidgets.QGroupBox(self.tab_2)
-        self.groupBox_5.setObjectName("groupBox_5")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_5)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.frame_7 = QtWidgets.QFrame(self.groupBox_5)
-        self.frame_7.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_7.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_7.setObjectName("frame_7")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.frame_7)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.splitter_3 = QtWidgets.QSplitter(self.frame_7)
-        self.splitter_3.setOrientation(QtCore.Qt.Vertical)
-        self.splitter_3.setObjectName("splitter_3")
-        self.groupBox_11 = QtWidgets.QGroupBox(self.splitter_3)
-        self.groupBox_11.setObjectName("groupBox_11")
-        self.groupBox_13 = QtWidgets.QGroupBox(self.splitter_3)
-        self.groupBox_13.setObjectName("groupBox_13")
-        self.verticalLayout_6.addWidget(self.splitter_3)
-        self.verticalLayout_3.addWidget(self.frame_7)
-        self.frame_8 = QtWidgets.QFrame(self.groupBox_5)
-        self.frame_8.setMinimumSize(QtCore.QSize(0, 100))
-        self.frame_8.setStyleSheet("/* Default Button */\n"
-"QPushButton {\n"
-"    background-color: rgb(191, 200, 187);\n"
-"    color: #555; /* */\n"
-"    border:None;\n"
-"  /*  border-bottom: 3px solid rgb(160, 160, 0); \n"
-"    border-right: 3px solid rgb(160, 160, 0);*/\n"
-"    border-radius: 5px;\n"
-"    padding: 8px 16px;\n"
-"    font-size: 14px;\n"
-"font-weight: bold;\n"
-"}\n"
-"\n"
-"/* Hover Effect */\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(0, 0, 175);  /* Slightly lighter on hover */\n"
-"    border: None;  /* Blue border */\n"
-"    color: white;\n"
-"}\n"
-"\n"
-"/* Pressed Effect */\n"
-"QPushButton:pressed {\n"
-"    background-color: #1f2e3d;  /* Darker shade when pressed */\n"
-"    border: 2px solid #2980b9;  /* Darker blue border */\n"
-"}\n"
-"\n"
-"/* Disabled Button */\n"
-"QPushButton:disabled {\n"
-"    background-color: #3a4f5c;  /* Muted gray */\n"
-"    color: #7f8c8d;  /* Faded text */\n"
-"    border: 2px solid #2c3e50;\n"
-"}\n"
-"")
-        self.frame_8.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_8.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_8.setObjectName("frame_8")
-        self.pushButton = QtWidgets.QPushButton(self.frame_8)
-        self.pushButton.setGeometry(QtCore.QRect(280, 20, 93, 28))
-        self.pushButton.setObjectName("pushButton")
-        self.verticalLayout_3.addWidget(self.frame_8)
-        self.horizontalLayout_2.addWidget(self.groupBox_5)
-        self.groupBox_6 = QtWidgets.QGroupBox(self.tab_2)
-        self.groupBox_6.setObjectName("groupBox_6")
-        self.horizontalLayout_2.addWidget(self.groupBox_6)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("UI/icons/sharing_954869.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon2.addPixmap(QtGui.QPixmap("UI/icons/sharing_955097.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.tabWidget.addTab(self.tab_2, icon2, "")
-        self.verticalLayout.addWidget(self.tabWidget)
+        self.verticalLayout.addWidget(self.widget)
         ANC_interface.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(ANC_interface)
         self.statusbar.setObjectName("statusbar")
@@ -762,14 +727,13 @@ class Ui_ANC_interface(object):
         self.actionOpen_old_project.setObjectName("actionOpen_old_project")
 
         self.retranslateUi(ANC_interface)
-        self.tabWidget.setCurrentIndex(0)
         self.select_NCA_comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(ANC_interface)
 
     def retranslateUi(self, ANC_interface):
         _translate = QtCore.QCoreApplication.translate
         ANC_interface.setWindowTitle(_translate("ANC_interface", "NoiseShield"))
-        self.tabWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>ANC Experiment</p></body></html>"))
+        self.widget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>ANC Experiment</p></body></html>"))
         self.add_Audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noised or clean Audio file from local folder</span></p></body></html>"))
         self.add_Audio_btn.setText(_translate("ANC_interface", "Import Audio file"))
         self.browse_noise_audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noise file from local folder</span></p></body></html>"))
@@ -793,26 +757,24 @@ class Ui_ANC_interface(object):
         self.groupBox_3.setTitle(_translate("ANC_interface", "\\ Signal Tree \\ Com. settings"))
         self.signalList_treeWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>imported Audio tree</p></body></html>"))
         self.signalList_treeWidget.headerItem().setText(0, _translate("ANC_interface", "Audio Items"))
-        self.label_3.setText(_translate("ANC_interface", "Select communication End"))
+        self.label_3.setText(_translate("ANC_interface", "Select communication Role"))
         self.label_4.setText(_translate("ANC_interface", "Port number: "))
         self.connect_with_server_btn.setText(_translate("ANC_interface", "Connect with server"))
-        self.slct_con_end_comboBox.setItemText(0, _translate("ANC_interface", "Sender End"))
-        self.slct_con_end_comboBox.setItemText(1, _translate("ANC_interface", "Receiver End"))
+        self.slct_con_end_comboBox.setItemText(0, _translate("ANC_interface", "Transmitter Role"))
+        self.slct_con_end_comboBox.setItemText(1, _translate("ANC_interface", "Receiver Role"))
         self.trun_on_server_btn.setText(_translate("ANC_interface", "Trun on Server"))
-        self.start_streaming_btn.setText(_translate("ANC_interface", "Start streaming..."))
+        self.start_streaming_btn.setText(_translate("ANC_interface", "Start broadcasting..."))
         self.groupBox_4.setTitle(_translate("ANC_interface", "\\ Signal waveform viewbox"))
+        self.spectrumINOUT_Viewbox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Waveform graphics view area</p></body></html>"))
+        item = self.spectrumINOUT_Viewbox.horizontalHeaderItem(0)
+        item.setText(_translate("ANC_interface", "signal profile index"))
+        item = self.spectrumINOUT_Viewbox.horizontalHeaderItem(1)
+        item.setText(_translate("ANC_interface", "Waveform"))
         self.spectrumViewbox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Waveform graphics view area</p></body></html>"))
         item = self.spectrumViewbox.horizontalHeaderItem(0)
         item.setText(_translate("ANC_interface", "signal profile index"))
         item = self.spectrumViewbox.horizontalHeaderItem(1)
         item.setText(_translate("ANC_interface", "Waveform"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab), _translate("ANC_interface", "ANC experiment"))
-        self.groupBox_5.setTitle(_translate("ANC_interface", "This side"))
-        self.groupBox_11.setTitle(_translate("ANC_interface", "Recorded signal waveform"))
-        self.groupBox_13.setTitle(_translate("ANC_interface", "Transmitted signal waveform"))
-        self.pushButton.setText(_translate("ANC_interface", "Start"))
-        self.groupBox_6.setTitle(_translate("ANC_interface", "Receiver end"))
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tab_2), _translate("ANC_interface", "Real time communication"))
         self.actionNew_project.setText(_translate("ANC_interface", "New project"))
         self.actionOpen_recent.setText(_translate("ANC_interface", "Open  recent"))
         self.actionOpen_old_project.setText(_translate("ANC_interface", "Open old project"))

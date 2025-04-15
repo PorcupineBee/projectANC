@@ -747,7 +747,7 @@ QLineEdit:disabled {
                    <item row="1" column="0" colspan="2">
                     <widget class="QLabel" name="label_3">
                      <property name="text">
-                      <string>Select communication End</string>
+                      <string>Select communication Role</string>
                      </property>
                     </widget>
                    </item>
@@ -831,12 +831,12 @@ background-color: rgb(255, 135, 137);
                     <widget class="QComboBox" name="slct_con_end_comboBox">
                      <item>
                       <property name="text">
-                       <string>Sender End</string>
+                       <string>Transmitter Role</string>
                       </property>
                      </item>
                      <item>
                       <property name="text">
-                       <string>Receiver End</string>
+                       <string>Receiver Role</string>
                       </property>
                      </item>
                     </widget>
@@ -939,7 +939,7 @@ background-color: rgb(255, 135, 137);
 }</string>
                      </property>
                      <property name="text">
-                      <string>Start streaming...</string>
+                      <string>Start broadcasting...</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>

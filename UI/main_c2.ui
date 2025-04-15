@@ -1,0 +1,1121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ANC_interface</class>
+ <widget class="QMainWindow" name="ANC_interface">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1057</width>
+    <height>714</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>NoiseShield</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/nsicon-removebg-preview.png</normaloff>icons/nsicon-removebg-preview.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(50, 50, 50);
+font: 8pt &quot;Arial&quot;;
+font: 8pt &quot;Comic Sans MS&quot;;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="font">
+       <font>
+        <family>Comic Sans MS</family>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ANC Experiment&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">/*Group boxes*/
+/* GroupBox Main Styling */
+QGroupBox {
+    border: 2px solid #777; /*rgb(255, 255, 127);*/ /* Slightly lighter border */
+    border-radius: 8px;
+    margin-top: 30px; /* Space for title */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* GroupBox Title */
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* Center the title */
+    background-color: transparent; /* No background for title */
+    padding: 5px 10px;
+    color: rgb(214, 211, 230) /*rgb(255, 255, 127); /* Blue title color */
+}
+
+/* GroupBox When Disabled */
+QGroupBox:disabled {
+    color: #7f8c8d; /* Faded text color */
+    border-color: #3a4f5c;
+}
+
+/* Default Button */
+
+QPushButton {
+	background-color: rgb(191, 200, 187);
+    color: #222; /* */
+	border:None;
+   border-right: 3px solid rgb(0, 170, 127);
+    border-bottom: 3px solid   rgb(85, 85, 127);
+    border-radius: 2px;
+    padding: 0px 16px;
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+/* Hover Effect */
+QPushButton:hover {
+    background-color: rgb(191, 200, 187);  /* Slightly lighter on hover */
+    border: None;  /* Blue border */
+  
+}
+
+/* Pressed Effect */
+QPushButton:pressed {
+    background-color: #1f2e3d;  /* Darker shade when pressed */
+    border: 2px solid #2980b9;  /* Darker blue border */
+	color: rgb(191, 200, 187);
+}
+
+/* Disabled Button */
+QPushButton:disabled {
+    background-color: #3a4f5c;  /* Muted gray */
+    color: #7f8c8d;  /* Faded text */
+    border: 2px solid #2c3e50;
+}
+/* ComboBox Main Styling */
+QComboBox {
+    background-color: rgb(191, 187, 200); /*#2c3e50;*/ /* Dark background */
+    border: 2px solid #34495e; /* Slightly lighter border */
+    border-radius: 6px;
+    padding: 5px 10px;
+   color: #222; /* Light text */
+    font-size: 14px;
+}
+
+/* Dropdown Arrow */
+QComboBox::drop-down {
+    border: none;
+    width: 20px;
+}
+
+QComboBox::down-arrow {
+    image: url(icons/down_arrow_dark.png); /* Replace with actual path if needed */
+    width: 12px;
+    height: 8px;
+}
+
+/* Popup List */
+QComboBox QAbstractItemView {
+    background-color:  rgb(191, 200, 187); /*#2c3e50; *//* Dark background */
+    border: 1px solid #34495e;
+    selection-background-color: rgb(191, 200, 187) ; /*#2980b9;*/ /* Blue highlight for selection */
+    selection-color: rgb(0, 81, 59);
+    padding: 4px;
+}
+
+/* Hover Effect */
+QComboBox:hover {
+    background-color: rgb(191, 200, 187); /*#3b5366*/
+    border: 2px solid #5dade2; /* Blue border */
+}
+
+/* When Pressed */
+QComboBox:pressed, QComboBox:on {
+    background-color: #1f2e3d;
+background-color: rgb(191, 200, 187);
+    border: 2px solid #2980b9;
+}
+
+/* Disabled */
+QComboBox:disabled {
+    background-color: #3a4f5c;
+background-color: rgb(191, 200, 187);
+    color: #7f8c8d;
+    border-color: #2c3e50;
+}
+QLabel {
+color:#f1f1f1;
+}
+</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
+       <property name="spacing">
+        <number>5</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <widget class="QFrame" name="frame">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>41</height>
+           </size>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="frame_10">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <property name="leftMargin">
+               <number>5</number>
+              </property>
+              <property name="topMargin">
+               <number>2</number>
+              </property>
+              <property name="rightMargin">
+               <number>5</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="add_Audio_btn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Import Noised or clean Audio file from local folder&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Import Audio file</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="browse_noise_audio_btn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Import Noise file from local folder&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Import Noise file</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="noise_type_comboBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>180</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select default noise audio to mix in clean audio file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="currentText">
+                 <string>Select Noise audio...</string>
+                </property>
+                <property name="placeholderText">
+                 <string>Select a noise signal</string>
+                </property>
+                <property name="frame">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>NCA  </string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="select_NCA_comboBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Noise Cancellation Algorithm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="currentText">
+                 <string>DNN</string>
+                </property>
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>DNN</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>AF</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>DNN+AF</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>SR</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="Sampling_rate_comboBox">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Sampling rate&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>16 kHz</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>44.1 kHz</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>48 kHz</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="start_recording_btn">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Comic Sans MS</family>
+                  <pointsize>8</pointsize>
+                  <weight>75</weight>
+                  <italic>false</italic>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;start live audio recording&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+border:None;
+border-left:5px solid rgb(0, 255, 0);
+background-color: rgb(53, 107, 79);
+color:white;
+border-radius:0px;
+}
+QPushButton::hover {
+border-left:5px solid rgb(85, 170, 255);
+background-color: rgb(36, 109, 109);
+
+}
+QPushButton::pressed {
+border-left:5px solid rgb(85, 170, 255);
+background-color: rgb(36, 109, 109);
+
+}
+QPushButton::checked {
+border-left:5px solid rgb(255, 0, 4);
+background-color: rgb(152, 0, 3);
+
+}</string>
+                </property>
+                <property name="text">
+                 <string>Start Live recording</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QFrame" name="frame_2">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QSplitter" name="splitter_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>230</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>\ Signal Tree \ Com. settings</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>5</number>
+               </property>
+               <property name="topMargin">
+                <number>7</number>
+               </property>
+               <property name="rightMargin">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>5</number>
+               </property>
+               <item>
+                <widget class="QTreeWidget" name="signalList_treeWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>220</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;imported Audio tree&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* QTreeWidget Background and Borders */
+QTreeWidget {
+    background-color: #2c3e50; /* Dark background */
+    border: 1px solid #1e272e; /* Darker border */
+    color: #ecf0f1; /* Light text */
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+/* Alternate Row Colors */
+QTreeWidget::item {
+    background-color: #34495e; /* Default row background */
+}
+
+QTreeWidget::item:alternate {
+    background-color: #3b5366; /* Slightly lighter background for alternate rows */
+}
+
+/* Selected Item */
+QTreeWidget::item:selected {
+    background-color: #2980b9; /* Blue selection */
+    color: white;
+    border: 1px solid #1f618d;
+}
+
+/* Hover Effect */
+QTreeWidget::item:hover {
+    background-color: #5dade2; /* Light blue on hover */
+}
+
+/* Disabled Items */
+QTreeWidget::item:disabled {
+    color: #7f8c8d; /* Muted text */
+    background-color: #3a4f5c;
+}
+
+/* Scrollbar Styling */
+QTreeWidget QScrollBar:vertical {
+    border: none;
+    background: #2c3e50;
+    width: 10px;
+}
+
+QTreeWidget QScrollBar::handle:vertical {
+    background: #3498db;
+    border-radius: 5px;
+}
+
+QTreeWidget QScrollBar::handle:vertical:hover {
+    background: #2980b9;
+}
+
+QTreeWidget QScrollBar::add-line, 
+QTreeWidget QScrollBar::sub-line {
+    background: none;
+    border: none;
+}
+</string>
+                 </property>
+                 <property name="verticalScrollMode">
+                  <enum>QAbstractItemView::ScrollPerPixel</enum>
+                 </property>
+                 <attribute name="headerVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="headerMinimumSectionSize">
+                  <number>10</number>
+                 </attribute>
+                 <attribute name="headerDefaultSectionSize">
+                  <number>50</number>
+                 </attribute>
+                 <attribute name="headerShowSortIndicator" stdset="0">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="headerStretchLastSection">
+                  <bool>false</bool>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Audio Items</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_3">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QLineEdit {
+    background-color: rgb(225, 255, 207);
+	color: rgb(0, 0, 127);
+    border: 2px solid #27ae60; /* Green border */
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+QLineEdit:hover {
+    background-color: #ffffff; /* Lighter background when focused */
+    border-color: #2ecc71; 
+}
+QLineEdit:focus {
+    background-color: #ffffff; 
+    border-color: rgb(255, 6, 135);
+}
+
+QLineEdit:disabled {
+    background-color: rgb(166, 199, 166); /* Faded light green for disabled state */
+    border-color: #27ae60; /* Lighter green border */
+    color: rgb(0, 0, 127); /* Faded text color */
+}
+</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <property name="leftMargin">
+                   <number>5</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>5</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>5</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>5</number>
+                  </property>
+                  <property name="spacing">
+                   <number>5</number>
+                  </property>
+                  <item row="0" column="0" colspan="2">
+                   <widget class="Line" name="line_3">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0" colspan="2">
+                   <widget class="QLabel" name="label_3">
+                    <property name="text">
+                     <string>Select communication Role</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>Port number: </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0" colspan="2">
+                   <widget class="QPushButton" name="connect_with_server_btn">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>31</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    background-color: #3498db; /* Default color */
+    color: white;
+  border-bottom: 3px solid  #2980b9;
+border-right: 2px solid  #2980b9;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+	font-weight:bold;
+}
+
+QPushButton:hover {
+    background-color: #5dade2; /* Hover color */
+    border: 0px solid #1f618d;
+}
+
+QPushButton:pressed {
+    background-color: #2e86c1; /* Pressed color */
+    border-color: #1b4f72;
+}
+
+QPushButton:disabled {
+    background-color: #bdc3c7;
+    border-color: #95a5a6;
+    color: #7f8c8d;
+}
+
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Connect with server</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QLineEdit" name="ngrok_port_lineEdit">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="readOnly">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="2">
+                   <widget class="QComboBox" name="slct_con_end_comboBox">
+                    <item>
+                     <property name="text">
+                      <string>Transmitter Role</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Receiver Role</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QPushButton" name="trun_on_server_btn">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>31</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    background-color: #27ae60; /* Default Green */
+    color: white;
+   border-bottom: 3px solid  #219150;
+   border-right: 2px solid  #219150;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2ecc71; /* Lighter Green on Hover */
+    border: 0px solid #1e8449;
+}
+
+QPushButton:pressed {
+    background-color: #1e8449; /* Dark Green when Pressed */
+    border-color: #145a32;
+}
+
+QPushButton:disabled {
+    background-color: #a5d6a7;
+    border-color: #81c784;
+    color: #4e6b4e;
+}
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Trun on Server</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0" colspan="2">
+                   <widget class="QPushButton" name="start_streaming_btn">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>31</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QPushButton {
+    background-color: #27ae60; /* Default Green */
+    color: white;
+  border-bottom: 3px solid  #219150;
+border-right: 2px solid  #219150;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2ecc71; /* Lighter Green on Hover */
+    border: 0px solid #1e8449;
+}
+
+QPushButton:pressed {
+    background-color: #1e8449; /* Dark Green when Pressed */
+    border-color: #145a32;
+}
+
+QPushButton:disabled {
+background-color:  #d6d6d6; /* Default Light Gray */
+    color: #777;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-color: #b0b0b0;
+}
+QPushButton::checked {
+background-color: rgb(255, 135, 137);
+ border-bottom: 3px solid rgb(220, 88, 90);
+ border-right: 2px solid rgb(220, 88, 90);
+}</string>
+                    </property>
+                    <property name="text">
+                     <string>Start broadcasting...</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QGroupBox" name="groupBox_4">
+              <property name="styleSheet">
+               <string notr="true">QTableWidget {
+    background-color: #121212;
+    alternate-background-color: #1e1e1e;
+    color: #e0e0e0;
+    gridline-color: #2e2e2e;
+    selection-background-color: #3d5afe;
+    selection-color: #ffffff;
+    border: 1px solid #2e2e2e;
+    font-size: 14px;
+}
+
+QHeaderView::section {
+    background-color: #2b2b2b;
+    color: #e0e0e0;
+    padding: 4px;
+    border: 1px solid #3c3c3c;
+    font-weight: bold;
+}
+
+QTableCornerButton::section {
+    background-color: #2b2b2b;
+    border: 1px solid #3c3c3c;
+}
+
+QScrollBar:vertical {
+    background: #1e1e1e;
+    width: 12px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #555;
+    min-height: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #888;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar:horizontal {
+    background: #1e1e1e;
+    height: 12px;
+    margin: 0px 0px 0px 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #555;
+    min-width: 20px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #888;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+</string>
+              </property>
+              <property name="title">
+               <string>\ Signal waveform viewbox</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <widget class="QSplitter" name="splitter_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <widget class="QFrame" name="frame_4">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_7">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTableWidget" name="spectrumINOUT_Viewbox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Waveform graphics view area&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="verticalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <property name="horizontalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <attribute name="horizontalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="horizontalHeaderCascadingSectionResizes">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>52</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderStretchLastSection">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderCascadingSectionResizes">
+                      <bool>true</bool>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>signal profile index</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Waveform</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                 <widget class="QFrame" name="frame_5">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_6">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTableWidget" name="spectrumViewbox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Waveform graphics view area&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="verticalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <property name="horizontalScrollMode">
+                      <enum>QAbstractItemView::ScrollPerPixel</enum>
+                     </property>
+                     <attribute name="horizontalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="horizontalHeaderCascadingSectionResizes">
+                      <bool>false</bool>
+                     </attribute>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>52</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderStretchLastSection">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderCascadingSectionResizes">
+                      <bool>true</bool>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>signal profile index</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Waveform</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew_project">
+   <property name="text">
+    <string>New project</string>
+   </property>
+  </action>
+  <action name="actionOpen_recent">
+   <property name="text">
+    <string>Open  recent</string>
+   </property>
+  </action>
+  <action name="actionOpen_old_project">
+   <property name="text">
+    <string>Open old project</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
