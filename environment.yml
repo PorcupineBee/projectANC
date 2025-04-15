@@ -22,3 +22,4 @@ dependencies:
       - deepfilternet
       - sounddevice
       - librosa
+      - pyaudio
