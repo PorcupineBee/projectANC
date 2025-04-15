@@ -521,21 +521,25 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
     def on_connection_established_client(self):
         self.showStatus("Connected to server! Awaiting audio stream...")
     
-    @pyqtSlot(np.ndarray, int)
+    @pyqtSlot(np.ndarray)
     def Audio_transmiter_recorded_chunk(self, 
-                                        audio_chunk:np.ndarray,
-                                        chunk_size:int):
+                                        _audio_chunk:np.ndarray):
         if self.Audio_transmiter["first_call"]:
             self.Audio_transmiter["noise_audio"] = self.project_registry.getTotalSignal(self.SamplingRate)
             self.Audio_transmiter["first_call"] = False
             self.clear_InOut_signal_widget()
         chkid = self.Audio_transmiter["chunk_index"]
-        normalize = np.abs(audio_chunk).max() > 10**-3
+        audio_chunk = np.copy(_audio_chunk)
+        chunk_size = audio_chunk.shape
+        max_ = np.abs(audio_chunk).max()
+        normalize = 1 >  max_ > 10**-3
+        
         try:
             noise = self.Audio_transmiter["noise_audio"][chkid*chunk_size:
                                                             (chkid+1) * chunk_size]
         except:
             noise = np.zeros_like(audio_chunk)
+        
         audio_chunk += noise
         if normalize:
             audio_chunk /= np.abs(audio_chunk).max()
@@ -544,7 +548,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         enhanced_chunk:np.ndarray = get_enhance_audio(audio_chunk, self.select_NCA_comboBox.currentIndex(), self.Audio_transmiter["cSampling_rate"]) if True else audio_chunk
         # FIXME make a function for when to send enhanced version and when to send  raw audio
         self.set_audio_in_canvas(enhanced_chunk, output=True, type="AudioTransmission")
-        return enhanced_chunk
+        
+        self.audio_server.setEnhancedata(enhanced_chunk)
         
     
     @pyqtSlot(np.ndarray)
@@ -584,6 +589,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         SR = self.SamplingRate if RATE==None else RATE
         widget = self.static_input_spect_widget if input==True else self.static_output_spect_widget
         widget.spectogramWidget.setSignalChunk(chunk, SR, barpos)
+        print(f"set_audio_in_canvas called {input} {output}")
         
     #endregion
 # endregion
@@ -720,7 +726,7 @@ def get_enhance_audio(chunk:np.ndarray, algo_code:int, sr:int):
         algo_code (int): _description_
         sr (int): _description_
     """
-    enhanced_audio = np.array([])
+    enhanced_audio = chunk #np.array([])
     if algo_code==0:
         # DNN algorithm
         ...

@@ -245,6 +245,7 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         data = data.flatten()
         self.livedata = np.append(self.livedata, data)
         self._fs = fs
+        print("inside setSignalChunk")
         if self.show_spectrum_flag:
             self.f, _t, chunk = scipy.signal.spectrogram(data, 
                                                     fs=self._fs, 

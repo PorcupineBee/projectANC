@@ -19,7 +19,7 @@ SERVER_PORT_FILE = "src/serverport.txt"
 class ServerAudioThread(QThread):
     debugpy.debug_this_thread()
     connection_established = pyqtSignal()
-    recorded_chunk = pyqtSignal(np.ndarray, int)
+    recorded_chunk = pyqtSignal(np.ndarray)
     def __init__(self, chunk=DEFAULT_CHUNK, sampling_rate=DEFAULT_RATE, parent=None):
         super().__init__(parent)
         self.host = "0.0.0.0"
@@ -33,6 +33,7 @@ class ServerAudioThread(QThread):
         self._go = True
         self.start_stream = False
         self.connection_status = False 
+        self.enh_data = np.zeros(chunk)
         
     def _read_port_from_file(self):
         try:
@@ -87,19 +88,26 @@ class ServerAudioThread(QThread):
                     # print("ACK send")
                 if self.conn:
                     data = stream.read(self.CHUNK, exception_on_overflow=False)
-                    _data = self.recorded_chunk(data, self.RATE)
-                    self.conn.sendall(_data)
+                    audio_data = np.frombuffer(data, dtype=np.float32) #.astype(np.float32)
+                    # print(type(data), audio_data.shape, "\n")
+                    self.recorded_chunk.emit(audio_data)
+                    self.conn.sendall(self.enh_data)
                     
         stream.stop_stream()
         stream.close()
         audio.terminate()
     
+    def setEnhancedata(self, _data):
+        self.enh_data = _data
+        
+        
     def stop(self):
         """Stop streaming and close connections"""
         # self.running = False
         self._go = False
         self.start_stream = False
         self.connection_status = False 
+        self.enh_data=np.zeros(DEFAULT_CHUNK)
         
         if self.conn:
             try:
@@ -160,8 +168,9 @@ class ClientAudioThread(QThread):
                     break
                 
                 wf.writeframes(data)
+                audio_data = np.frombuffer(data, dtype=np.float32) #.astype(np.float32)
                 
-                self.audio_received.emit(data)
+                self.audio_received.emit(audio_data)
             else:
                 self.connection_established.emit()
                 self.streaming_started = True     
