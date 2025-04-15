@@ -30,12 +30,13 @@ class TimeFrequencyWidget(QWidget):
         self.barmoveThread.movebar.connect(self.spectogramWidget.move_inf_line)
         
         
-        if (("audio_data" in kwargs.keys()) and 
-            ("fs" in kwargs.keys())):
-            audio_data = kwargs.pop("audio_data")
-            fs = kwargs.pop("fs")
-            self.updateAudio(audio_data=audio_data,
-                             fs=fs)
+        self.spectogramWidget.showSpectrum(1)
+        # if (("audio_data" in kwargs.keys()) and 
+        #     ("fs" in kwargs.keys())):
+        #     audio_data = kwargs.pop("audio_data")
+        #     fs = kwargs.pop("fs")
+        #     self.updateAudio(audio_data=audio_data,
+        #                      fs=fs)
         
     def initUI(self):
         # region UI part
@@ -109,7 +110,7 @@ QPushButton{
         self.showSpectogram = QRadioButton(self)
         self.showSpectogram.setText("Show Spectogram")
         self.showSpectogram.setChecked(True)
-        self.showSpectogram.toggled.connect(self.spectogramWidget.showSpectrum)
+        self.showSpectogram.toggled.connect(self.show_spectrum)
         self.control_layout.addWidget(self.showSpectogram)
         
         hspecer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -133,30 +134,12 @@ QPushButton{
         self.setLayout(main_layout)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
-        # region Not needed
-        # self.setWindowTitle("Time-Frequency Spectrum Viewer")
-        # self.setGeometry(100, 100, 800, 500)
-        
-        # # Data for simulation
-        # self.timer = QTimer()
-        # self.timer.timeout.connect(self.update_progress)
-        self.is_playing = False # ensures audio is not playing at initialization
-        # self.progress_line = pg.InfiniteLine(pos=0, angle=90, pen='r')
-        # self.spectogramWidget.addItem(self.progress_line)
-        
-        # # Load example audio
-        # self.audio_data, self.sample_rate = self.load_audio()
-        # self.spectrogram_data, self.freqs, self.times = self.compute_spectrogram(self.audio_data, self.sample_rate)
-        
-        # # Plot spectrogram
-        # self.img = pg.ImageItem()
-        # self.spectogramWidget.addItem(self.img)
-        # self.img.setImage(10 * np.log10(self.spectrogram_data + 1e-10))
-        # self.img.scale(self.times[-1] / self.img.width(), self.freqs[-1] / self.img.height())
-        # self.current_time_index = 0
-        # endregion
-        
+        self.is_playing = False 
     
+    def show_spectrum(self, flag):
+        self.spectogramWidget.showSpectrum(flag, bypass=True)    
+        self.spectogramWidget.plot_item.autoRange()
+        
     def toggle_playback(self):
         if self.is_playing:
             # 
@@ -171,14 +154,14 @@ QPushButton{
             self.Audio_thread.start()    
         self.is_playing = not self.is_playing
     
-    def updateAudio(self, audio_data, fs):
+    def updateAudio(self, audio_data, fs, barpos="end"):
         if self.audio_running:
             self.stopAudio()
         # update audio for the thread
         self.Audio_thread.update_Audio(audio_data, fs)
         # update spectogram data
         self.barmoveThread.dt = fs
-        self.spectogramWidget.update_spectrogram(audio_data, fs)
+        self.spectogramWidget.setSignalChunk(audio_data, fs, barpos=barpos)
         
         
     def playAudio(self):
@@ -218,9 +201,11 @@ QPushButton{
             self.spectogramWidget.inf_bar.setPos(0)
             self.spectogramWidget.plot_item.autoRange()
     
-    def liverec_update(self, data_chunk, sr):
-        self.spectogramWidget.live_update_spectrum(data_chunk, sr)
+    def liverec_update(self, data_chunk, sr, barpos):
+        self.spectogramWidget.setSignalChunk(data_chunk, sr, barpos)
         
+    def clearCanvas(self):
+        self.spectogramWidget.clearCanvasArea(self.showSpectogram.isChecked())
     #endregion L
         
 class SpectrogramWidget(pg.GraphicsLayoutWidget):
@@ -231,21 +216,21 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         self.plot_item = self.addPlot()
         self.plot_item.setLabel('bottom', 'Time', units='s')
         
-        self.showSpectrum(True)
-        self._audio_data = None
         self._fs = 0
+        self.createSoundbar()
+        
+        self.chunk_size = 512
+        self.time_window_secs = 5  # initial view of 5 seconds
+        
+        self.clearCanvasArea(True)
+    
+    def createSoundbar(self):
         self.inf_bar = pg.InfiniteLine(0, movable=True, angle=90, bounds=[0, 1000])
         self.plot_item.addItem(self.inf_bar)
         self.inf_bar.setZValue(100)
         
-        self.livedata = np.array([])
-        self.chunk_size = 512
-        self.time_window_secs = 5  # initial view of 5 seconds
-        self.current_time = 0
-        self.timeline = np.array([])
-        
 
-    def live_update_spectrum(self, data:np.ndarray, fs:float):
+    def setSignalChunk(self, data:np.ndarray, fs:float, barpos="end"):
         """_summary_
 
         Args:
@@ -255,43 +240,63 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         Raises:
             NotImplemented: _description_
         """
+       
+        
         data = data.flatten()
-        if self.show_spectrum_flag:        
-            f, _t, chunk = scipy.signal.spectrogram(data, 
+        self.livedata = np.append(self.livedata, data)
+        self._fs = fs
+        if self.show_spectrum_flag:
+            self.f, _t, chunk = scipy.signal.spectrogram(data, 
                                                     fs=self._fs, 
-                                                    nperseg=512, #2048, 
+                                                    nperseg=self.chunk_size, #2048, 
                                                     noverlap=0, #0.75, 
                                                     window='hamming', 
                                                     scaling='density', 
                                                     mode='psd')
             chunk = 10 * np.log10(chunk + 1e-10)  # Add small value to avoid log(0)
             self.current_time += _t[-1] #self.chunk_size / self._fs
-        else:
-            chunk = data
-            self.timeline = np.append(self.timeline, np.arange(len(data))/self._fs)
-        
-        if len(self.livedata)==0:
-            self.livedata = chunk
-        else:
-            self.livedata = np.hstack((self.livedata, chunk))
-            
-        if self.show_spectrum_flag:        
+            if len(self.liveSpectrumdata)==0:
+                self.liveSpectrumdata = chunk
+            else:
+                self.liveSpectrumdata = np.hstack((self.liveSpectrumdata, chunk))
+                
             # Update image and scale
-            self.img.setImage(self.livedata.T)
+            self.img.setImage(self.liveSpectrumdata.T)
+            # self.colorbar.setLevels([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
             tr = QtGui.QTransform()
-            tr.scale(self.current_time/self.livedata.shape[1], (f[-1]-f[0])/self.livedata.shape[0])
+            tr.scale(self.current_time/self.liveSpectrumdata.shape[1], 
+                     (self.f[-1]-self.f[0])/self.liveSpectrumdata.shape[0])
             self.img.setTransform(tr)
-            self.plot_item.setYRange(f[0], f[-1])        
-            self.inf_bar.setPos(self.current_time)
+            self.plot_item.setYRange(self.f[0], self.f[-1])        
+            
         else:
-            self.curve= self.plot_item.plot(self.timeline, self.livedata, 
-                                             pen=pg.mkPen(color='r', width=1))
+            newtime_line = (self.timeline[-1] + np.arange(len(data))/self._fs 
+                            if self.timeline[-1]==0 else
+                            self.timeline[-1] + np.arange(1, len(data)+1)/self._fs)
+            self.current_time= newtime_line[-1]
+            self.timeline = np.append(self.timeline, newtime_line)
+            
+            # Update image and scale
+            self.curve= self.plot_item.plot(newtime_line, data, pen=pg.mkPen(color='r', width=1))
+        
+        if barpos=="end":
             self.inf_bar.setPos(self.current_time)
-            raise NotImplemented("Not implemented yet0")
+        elif isinstance(barpos, (int, float)):
+            self.inf_bar.setPos(barpos)  
+            
         self.plot_item.setXRange(self.current_time-self.time_window_secs, self.current_time)
             
+    
+    def clearCanvasArea(self, flag):
+        self.livedata = np.array([])
+        self.liveSpectrumdata =np.array([])
+        self.inf_bar.setPos(0)
+        self.current_time = 0
+        self.timeline = np.array([0])
         
-    def showSpectrum(self, flag):
+        self.showSpectrum(flag)
+        
+    def showSpectrum(self, flag, bypass=False):
         """
         Toggles the display of a spectrum visualization between an image-based 
         spectrogram and a curve-based plot, depending on the provided flag.
@@ -319,17 +324,24 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
                 self.addItem(self.colorbar)
             self.colorbar.setVisible(True)
             self.colorbar.setImageItem(self.img)            
+            self.colorbar.setLevels((-100, -20))
         else:
             # keep curve item remove image item
             self.plot_item.setLabel('left', 'Amplitude')
             if hasattr(self, "img"):
                 self.colorbar.setVisible(False)
-                self.plot_item.removeItem(self.img)
+                self.img.setVisible(False)
+                # self.plot_item.removeItem(self.img)
+                self.plot_item.clear()
+                # delattr(self, "img")
+                self.createSoundbar()
         
-        if hasattr(self,"_audio_data") and (self._audio_data is not None):
-            self.update_spectrogram(self._audio_data, self._fs)
+        if not bypass and hasattr(self,"livedata") and (self.livedata.size > 0):
+            self.setSignalChunk(self.livedata, self._fs, barpos=0)
+        if bypass:
+            self.update_spectrogram()    
             
-    def update_spectrogram(self, data, fs):
+    def update_spectrogram(self):
         """
         Update the spectrogram with new data
         
@@ -337,12 +349,10 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             data: The signal data (1D numpy array)
             fs: Sampling frequency in Hz
         """
-        self._audio_data = data
-        self._fs = fs
         if self.show_spectrum_flag:
             # Compute the spectrogram with parameters optimized for audio
-            f, t, Sxx = scipy.signal.spectrogram(data, 
-                                                 fs=fs, 
+            f, t, Sxx = scipy.signal.spectrogram(self.livedata, 
+                                                 fs=self._fs, 
                                                  nperseg=None, #2048, 
                                                  noverlap=0.75, 
                                                 window='hamming', 
@@ -362,8 +372,8 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             
             self.colorbar.setLevels((Sxx_db.min(), Sxx_db.max()))
         else:
-            TimeStamp = np.linspace(0, round(len(data) / fs, 5), len(data))
-            self.curve = self.plot_item.plot(TimeStamp[::5], data[::5], 
+            TimeStamp = np.linspace(0, round(len(self.livedata) / self._fs, 5), len(self.livedata))
+            self.curve = self.plot_item.plot(TimeStamp[::5], self.livedata[::5], 
                                              pen=pg.mkPen(color='r', width=1))
         
         self.plot_item.autoRange()
@@ -487,9 +497,9 @@ class EnhancedTimeFrequencyWidget(TimeFrequencyWidget):
     def start_denoising_task(self):
         self.EnhancerThread.start()
         
-    def EnhanceThisAudio(self, audio, sr):
+    def EnhanceThisAudio(self, audio, sr, barpos):
         paudio = audio + np.random.normal(0, 0.02, size=audio.shape)
-        self.updateAudio(paudio, sr)
+        self.updateAudio(paudio, sr, barpos)
         
     def NoiseEleminationProcess(self):
         ...

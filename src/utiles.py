@@ -200,8 +200,8 @@ def setInputSignals(audio_signals:dict, frame):
 from UI.plot_tf_spectrum_static import TimeFrequencyWidget, EnhancedTimeFrequencyWidget
 def getDefultSpectrumWidget(winflag):
     default_settings = dict(
-        audio_data = np.zeros(48*10**4), # + 0.25 * np.random.rand(48*10**4),
-        fs=16*10**3
+        audio_data = np.empty(0), # + 0.25 * np.random.rand(48*10**4),
+        fs=16000
     )
     if winflag:
         _tfwidget = TimeFrequencyWidget(**default_settings)

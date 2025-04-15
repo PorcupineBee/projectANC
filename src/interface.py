@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QMdiArea, QMdiSubWindow,
                            QFontDialog, QMessageBox, QCheckBox, QSizePolicy,
                            QToolButton
                            )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSlot
 import pyqtgraph as pg
 import torchaudio as ta
 import torch 
@@ -22,10 +22,11 @@ from UI.plotsignal import defaultPlotSettings, TimeSeriesPlotWidget
 from UI.play_soundbox import NoisePlayerThread
 from .utiles import (getAudioSignal_n_Time, signal_registry, getDefultSpectrumWidget, getRotatedLabel)
 from functools import partial 
-from UI.plot_tf_spectrum_static import TimeFrequencyWidget 
+from UI.plot_tf_spectrum_static import TimeFrequencyWidget,  EnhancedTimeFrequencyWidget
 from src.live_record import RealTimeProcessor
 from src.voicecom3 import ServerAudioThread, ClientAudioThread
 import threading
+
 SERVER_PORT = 1109
 
 # region Auxillary functions
@@ -176,7 +177,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                         "Audio Files (*.wav *.mp3 *.flac *.ogg *.aac);;All Files (*)", options=options)
 
         if file_path:
-            self.addASignalStremer(stype="signal", audio_file=file_path)
+            self.addASignalStremer(stype="signal", audio_file=file_path, barpos=0)
             self.showStatus(file_path, align="right")
 
     def browse_noise_audio_action(self):
@@ -228,6 +229,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.connect_with_server_btn.setVisible(index==1)
         self.ngrok_port_lineEdit.setEnabled(index==1)
         self.ngrok_port_lineEdit.setReadOnly(index==0)
+        self.start_streaming_btn.setVisible(index==0)
         
             
     def trun_on_server_task(self, aflag):
@@ -294,7 +296,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
     # region Signal streamer
     def addASignalStremer(self, stype:str, 
                           audio_file:str, 
-                          recorded:bool=False):
+                          recorded:bool=False,
+                          **kwrags):
         """
         Adds a signal streamer to the project registry and updates the UI with a new plot widget.
 
@@ -336,14 +339,15 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
         # add item in signalList_treeWidget
         basename = os.path.basename(audio_file)
-        self.addSignalItem(basename, order)
+        self.addSignalItem(basename, order, **kwrags)
     
     
     #========== Signal TREE funtionalities        
     def addSignalItem(self, name:str, 
                       order, 
                       checked:bool=True, 
-                      parmanent:bool=False):
+                      parmanent:bool=False,
+                      **kwrags):
         treeItem = QTreeWidgetItem()
         treeItem.setText(0, name)
         if parmanent : order -= 2 
@@ -367,7 +371,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
             self.order_key[order].update(treeItem=treeItem)
             
-            self.updateInputAudio()
+            self.updateInputAudio(**kwrags)
         
         
     def dontAddSignal(self, name, flag):
@@ -390,11 +394,16 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
         self.updateInputAudio()
         
-    def updateInputAudio(self):
+    def updateInputAudio(self, **kwrags):
+        barpos = kwrags.get("barpos", "end")
         audio = self.project_registry.getTotalSignal(self.SamplingRate)
-        self.static_input_spect_widget.updateAudio(audio, self.SamplingRate)
-        self.static_output_spect_widget.liverec_update(audio, self.SamplingRate)
+        self.static_input_spect_widget.clearCanvas()
+        self.static_output_spect_widget.clearCanvas()
+        self.static_input_spect_widget.updateAudio(audio, self.SamplingRate, barpos)
+        self.static_output_spect_widget.EnhanceThisAudio(audio, self.SamplingRate, barpos)
         
+        self.static_input_spect_widget.spectogramWidget.plot_item.autoRange()
+        self.static_output_spect_widget.spectogramWidget.plot_item.autoRange()
     # endregion
     
     
@@ -424,7 +433,7 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
         if not hasattr(self, "static_output_spect_widget"):
             # create default static_input_spect_widget attribute
-            self.static_output_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget(False)
+            self.static_output_spect_widget: EnhancedTimeFrequencyWidget = getDefultSpectrumWidget(False)
             
             _label = getRotatedLabel("Enhanced signal", height=300)
             self.spectrumViewbox.setCellWidget(1, 0, _label)
@@ -436,15 +445,30 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.live_recording = RealTimeProcessor(
                     filename_original=f"{self.working_dir}/original_voice_record.wav", 
                     filename_modified=f"{self.working_dir}/modified_voice_record.wav",
-                    input_spectrum_appender=self.static_input_spect_widget.spectogramWidget.live_update_spectrum,
-                    output_spectrum_appender=self.static_output_spect_widget.spectogramWidget.live_update_spectrum,
+                    input_spectrum_appender=self.static_input_spect_widget.spectogramWidget.setSignalChunk,
+                    output_spectrum_appender=self.static_output_spect_widget.spectogramWidget.setSignalChunk,
                     blocksize=512)
         
         self.audio_server = ServerAudioThread(parent=self)
         self.audio_server.connection_established.connect(self.on_connection_established)
+        self.audio_server.recorded_chunk.connect(self.Audio_transmiter_recorded_chunk)
+        self.Audio_transmiter = dict(
+            first_call=True,
+            noise_audio=None,
+            chunk_index=0,
+            cSampling_rate=self.SamplingRate
+        )
+        
         
         self.audio_client = ClientAudioThread(parent=self)
         self.audio_client.connection_established.connect(self.on_connection_established_client)    
+        self.audio_client.audio_received.connect(self.Audio_receiver_received_chunk)    
+        self.Audio_receiver = dict(
+            first_call=True,
+            # noise_audio=None,
+            # chunk_index=0,
+            cSampling_rate=self.SamplingRate
+        )
     
     #region LIVE recording 
     def start_recording_action(self, flag):
@@ -452,7 +476,9 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         start live audio recording
         """
         if flag:
-            ...
+            self.static_input_spect_widget.clearCanvas()
+            self.static_output_spect_widget.clearCanvas()
+            
             # pyaudio functionalities for recording audio
             # as well as update input spectrum frame
             self.live_recording.start_recording()
@@ -494,13 +520,71 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
     
     def on_connection_established_client(self):
         self.showStatus("Connected to server! Awaiting audio stream...")
+    
+    @pyqtSlot(np.ndarray, int)
+    def Audio_transmiter_recorded_chunk(self, 
+                                        audio_chunk:np.ndarray,
+                                        chunk_size:int):
+        if self.Audio_transmiter["first_call"]:
+            self.Audio_transmiter["noise_audio"] = self.project_registry.getTotalSignal(self.SamplingRate)
+            self.Audio_transmiter["first_call"] = False
+            self.clear_InOut_signal_widget()
+        chkid = self.Audio_transmiter["chunk_index"]
+        normalize = np.abs(audio_chunk).max() > 10**-3
+        try:
+            noise = self.Audio_transmiter["noise_audio"][chkid*chunk_size:
+                                                            (chkid+1) * chunk_size]
+        except:
+            noise = np.zeros_like(audio_chunk)
+        audio_chunk += noise
+        if normalize:
+            audio_chunk /= np.abs(audio_chunk).max()
         
-    # def save_received_audio(self):
-    #     filename = self.filename_input.text() or "received_audio.wav"
-    #     if self.audio_client.save_audio(filename):
-    #         self.status_label.setText(f"Audio saved to {filename}")
+        self.set_audio_in_canvas(audio_chunk, input=True, type="AudioTransmission")
+        enhanced_chunk:np.ndarray = get_enhance_audio(audio_chunk, self.select_NCA_comboBox.currentIndex(), self.Audio_transmiter["cSampling_rate"]) if True else audio_chunk
+        # FIXME make a function for when to send enhanced version and when to send  raw audio
+        self.set_audio_in_canvas(enhanced_chunk, output=True, type="AudioTransmission")
+        return enhanced_chunk
+        
     
-    
+    @pyqtSlot(np.ndarray)
+    def Audio_receiver_received_chunk(self, audio_chunk:np.ndarray):
+        if self.Audio_receiver["first_call"]:
+            self.Audio_receiver["first_call"] = False
+            self.clear_InOut_signal_widget()
+        self.set_audio_in_canvas(audio_chunk, output=True, type="AudioReceived")
+
+    def clear_InOut_signal_widget(self):
+        self.static_input_spect_widget.clearCanvas()
+        self.static_output_spect_widget.clearCanvas()
+        
+        
+    def set_audio_in_canvas(self, 
+                            chunk:np.ndarray, 
+                            type:str,
+                            RATE:int=None,
+                            input:bool=False, 
+                            output:bool=False,
+                            barpos:str="end",
+                            ):
+        """_summary_
+
+        Args:
+            chunk (np.ndarray): _description_
+            type (str): _description_
+            input (bool, optional): _description_. Defaults to False.
+            output (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
+        """
+        
+        if input==output:
+            raise ValueError("Any one of input or output should be True another False")
+        SR = self.SamplingRate if RATE==None else RATE
+        widget = self.static_input_spect_widget if input==True else self.static_output_spect_widget
+        widget.spectogramWidget.setSignalChunk(chunk, SR, barpos)
+        
     #endregion
 # endregion
 
@@ -628,6 +712,26 @@ class StartUpInterface(Ui_NoiseShieldPopUp, QMainWindow):
         project_path = self.recent_projects_table.item(row, 0).text()  # Get clicked cell value
         self.open_old_project_action(folderpath=project_path)
 
+def get_enhance_audio(chunk:np.ndarray, algo_code:int, sr:int):
+    """_summary_
+
+    Args:
+        chunk (np.ndarray): _description_
+        algo_code (int): _description_
+        sr (int): _description_
+    """
+    enhanced_audio = np.array([])
+    if algo_code==0:
+        # DNN algorithm
+        ...
+    elif algo_code==1:
+        # use AF algorithm
+        ...
+    elif algo_code==2:
+        # use AF + DNN algorithm
+        ...
+
+    return enhanced_audio
 
 # endregion
 if __name__ == "__main__":

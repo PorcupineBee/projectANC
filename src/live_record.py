@@ -19,7 +19,7 @@ class RealTimeProcessor:
         self.modified_buffer = []
         self.stream = None
         self.is_recording = False
-        self.input_spectrum_appender = input_spectrum_appender
+        self.input_spectrum_appender =  input_spectrum_appender
         self.output_spectrum_appender = output_spectrum_appender
 
     def processing_function(self, chunk):

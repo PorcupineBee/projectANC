@@ -351,8 +351,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         # self.live_recording = RealTimeProcessor(
         #             filename_original=f"{self.working_dir}/original_voice_record.wav", 
         #             filename_modified=f"{self.working_dir}/modified_voice_record.wav",
-        #             input_spectrum_appender=self.static_input_spect_widget.spectogramWidget.live_update_spectrum,
-        #             output_spectrum_appender=self.static_output_spect_widget.spectogramWidget.live_update_spectrum,
+        #             input_spectrum_appender=self.static_input_spect_widget.spectogramWidget.setSignalChunk,
+        #             output_spectrum_appender=self.static_output_spect_widget.spectogramWidget.setSignalChunk,
         #             blocksize=512)
         
             # Set up threads

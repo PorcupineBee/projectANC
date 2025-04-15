@@ -6,6 +6,8 @@ import re
 from PyQt5.QtCore import QThread, pyqtSignal
 import debugpy
 import time
+import wave
+
 # Audio configuration
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -17,7 +19,7 @@ SERVER_PORT_FILE = "src/serverport.txt"
 class ServerAudioThread(QThread):
     debugpy.debug_this_thread()
     connection_established = pyqtSignal()
-    
+    recorded_chunk = pyqtSignal(np.ndarray, int)
     def __init__(self, chunk=DEFAULT_CHUNK, sampling_rate=DEFAULT_RATE, parent=None):
         super().__init__(parent)
         self.host = "0.0.0.0"
@@ -45,31 +47,6 @@ class ServerAudioThread(QThread):
             print(f"Error reading port: {e}")
             return None
     
-    # region 
-    # def start_server(self):
-    #     """Initialize server socket and wait for client connection"""
-    #     try:
-    #         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #         self.server.bind((self.host, self._port))
-    #         self.server.listen(5)
-            
-    #         print(f"Server listening on port {self._port}")
-    #         self.conn, self.address = self.server.accept()
-    #         print(f"Connection from {self.address}")
-            
-    #         # Wait for client's confirmation code
-    #         response = self.conn.recv(self.CHUNK)
-    #         if response and response.decode() == "1":
-    #             print("Connection established, ready to stream")
-    #             self.connection_established.emit()
-    #             self.conn.sendall("ACK".encode('utf-8'))
-    #             return True
-    #         return False
-    #     except Exception as e:
-    #         print(f"Server error: {e}")
-    #         return False
-    # endregion
-    
     def trun_on_streaming(self):
         self.start_stream = True
         self.send_one_time = True  # make it outside
@@ -77,8 +54,6 @@ class ServerAudioThread(QThread):
     def trun_off_streaming(self):
         self.start_stream = False
         
-    def trun_off_connection(self):
-        self._go = False
         
     def run(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -112,23 +87,19 @@ class ServerAudioThread(QThread):
                     # print("ACK send")
                 if self.conn:
                     data = stream.read(self.CHUNK, exception_on_overflow=False)
+                    _data = self.recorded_chunk(data, self.RATE)
+                    self.conn.sendall(_data)
                     
-                    self.conn.sendall(data)
-                    # print("data send", data)
-                
-                # Clean up
         stream.stop_stream()
         stream.close()
         audio.terminate()
-        # except Exception as e:
-        #     print(f"Error in server audio streaming: {e}")
-        # finally:
-        #     self.stop()
     
     def stop(self):
         """Stop streaming and close connections"""
         # self.running = False
         self._go = False
+        self.start_stream = False
+        self.connection_status = False 
         
         if self.conn:
             try:
@@ -140,12 +111,13 @@ class ServerAudioThread(QThread):
                 self.server.close()
             except:
                 pass
-
-import wave
-
+        self.conn = None
+        self.server = None
+        
+        
 class ClientAudioThread(QThread):
     connection_established = pyqtSignal()
-    audio_received = pyqtSignal(bytes)
+    audio_received = pyqtSignal(np.ndarray)
     
     def __init__(self, chunk=DEFAULT_CHUNK, sampling_rate=DEFAULT_RATE, parent=None):
         super().__init__(parent)
@@ -160,25 +132,6 @@ class ClientAudioThread(QThread):
         self.connection_status = False
         self.streaming_started = False
         
-    def connect_to_server(self, port):
-        """Connect to server and send confirmation code"""
-        try:
-            self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.client.connect((self.host, port))
-            print(f"Connected to server at {self.host}:{port}")
-            
-            # Send confirmation code
-            self.client.send("1".encode('utf-8'))
-            
-            # Wait for acknowledgment
-            response = self.client.recv(self.CHUNK).decode('utf-8')
-            if response == "ACK":
-                self.connection_established.emit()
-                return True
-            return False
-        except Exception as e:
-            print(f"Connection failed: {e}")
-            return False
     
     def setPort(self, port):
         self._port = port
@@ -189,18 +142,11 @@ class ClientAudioThread(QThread):
         self.client.connect((self.host, self._port))
         print(f"Connected to server at {self.host}:{self._port}")
         
-        # audio = pyaudio.PyAudio()
-        # stream = audio.open(format=FORMAT, channels=CHANNELS, 
-        #                     rate=self.RATE, output=False, 
-        #                     frames_per_buffer=self.CHUNK)
-        
-        # self.running = True
         wf = wave.open("received_audio.wav", "wb")
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(2)
         wf.setframerate(self.RATE)
 
-        self.audio_buffer = bytearray()
         while self._go:
             # Send confirmation code
             if not self.connection_status :
@@ -213,50 +159,21 @@ class ClientAudioThread(QThread):
                 if not data:
                     break
                 
-                # Play the audio
-                # stream.write(data)
                 wf.writeframes(data)
-
-                # print("got some chunk")
-                # Store the audio data
-                self.audio_buffer.extend(data)
+                
                 self.audio_received.emit(data)
             else:
                 self.connection_established.emit()
                 self.streaming_started = True     
-                # print("received:: ", data)           
-            
-
-        # stream.stop_stream()
-        # stream.close()
-        # audio.terminate()
-        # self.save_audio()
         wf.close()
         print("Thread terminated")
 
-                
-        
-    
-    def save_audio(self, filename="received_audio.wav"):
-        """Save received audio to a WAV file"""
-        print("saving received audio")
-        
-        try:
-            with wave.open(filename, 'wb') as wf:
-                wf.setnchannels(CHANNELS)
-                wf.setsampwidth(pyaudio.PyAudio().get_sample_size(FORMAT))
-                wf.setframerate(self.RATE)
-                wf.writeframes(self.audio_buffer)
-            print(f"Audio saved to {filename}")
-            return True
-        except Exception as e:
-            print(f"Error saving audio: {e}")
-            return False
     
     def stop(self):
         """Stop receiving and close connection"""
-        # self.running = False
         self._go = False
+        self.connection_status = False
+        self.streaming_started = False
         if self.client:
             try:
                 self.client.close()
