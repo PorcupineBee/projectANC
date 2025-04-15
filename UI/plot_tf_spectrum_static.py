@@ -254,15 +254,20 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
                                                     window='hamming', 
                                                     scaling='density', 
                                                     mode='psd')
+            
+            print("max_min in chank: ", chunk.min(), chunk.max(), data.max(), data.min())
             chunk = 10 * np.log10(chunk + 1e-10)  # Add small value to avoid log(0)
             self.current_time += _t[-1] #self.chunk_size / self._fs
-            if len(self.liveSpectrumdata)==0:
+            
+            print("self.liveSpectrumdata",self.liveSpectrumdata.size)
+            if self.liveSpectrumdata.size==0:
                 self.liveSpectrumdata = chunk
             else:
                 self.liveSpectrumdata = np.hstack((self.liveSpectrumdata, chunk))
-                
+            
             # Update image and scale
             self.img.setImage(self.liveSpectrumdata.T)
+            print([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
             # self.colorbar.setLevels([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
             tr = QtGui.QTransform()
             tr.scale(self.current_time/self.liveSpectrumdata.shape[1], 
@@ -331,7 +336,6 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             self.plot_item.setLabel('left', 'Amplitude')
             if hasattr(self, "img"):
                 self.colorbar.setVisible(False)
-                self.img.setVisible(False)
                 # self.plot_item.removeItem(self.img)
                 self.plot_item.clear()
                 # delattr(self, "img")

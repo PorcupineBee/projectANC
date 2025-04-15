@@ -88,8 +88,9 @@ class ServerAudioThread(QThread):
                     # print("ACK send")
                 if self.conn:
                     data = stream.read(self.CHUNK, exception_on_overflow=False)
-                    audio_data = np.frombuffer(data, dtype=np.float32) #.astype(np.float32)
+                    audio_data = np.frombuffer(data, dtype=np.int16).astype(np.float32)
                     # print(type(data), audio_data.shape, "\n")
+                    
                     self.recorded_chunk.emit(audio_data)
                     self.conn.sendall(self.enh_data)
                     
@@ -168,7 +169,7 @@ class ClientAudioThread(QThread):
                     break
                 
                 wf.writeframes(data)
-                audio_data = np.frombuffer(data, dtype=np.float32) #.astype(np.float32)
+                audio_data = np.frombuffer(data, dtype=np.int16).astype(np.float32)
                 
                 self.audio_received.emit(audio_data)
             else:
