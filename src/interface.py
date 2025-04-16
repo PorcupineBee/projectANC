@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QMdiArea, QMdiSubWindow,
                            QHBoxLayout, QSplitter, QGroupBox, 
                            QTreeWidget, QFrame, QDoubleSpinBox, QTreeWidgetItem,
                            QFontDialog, QMessageBox, QCheckBox, QSizePolicy,
-                           QToolButton
+                           QToolButton, QShortcut
                            )
 from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtGui import QKeySequence
 import pyqtgraph as pg
 import torchaudio as ta
 import torch 
@@ -26,6 +27,7 @@ from UI.plot_tf_spectrum_static import TimeFrequencyWidget,  EnhancedTimeFrequen
 from src.live_record import RealTimeProcessor
 from src.voicecom3 import ServerAudioThread, ClientAudioThread
 import threading
+from  src.NCA_functions_n_class import getANC_method
 
 SERVER_PORT = 1109
 
@@ -81,6 +83,17 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         self.trun_on_server_btn.toggled.connect(self.trun_on_server_task)
         self.connect_with_server_btn.toggled.connect(self.connect_with_server_task)
         self.start_streaming_btn.toggled.connect(self.start_streaming_task)
+        self.signalList_treeWidget.itemDoubleClicked.connect(self.signalList_treeWidget_item_double_clicked)
+        
+        shortcut = QShortcut(QKeySequence("Alt+Right"), self)
+        shortcut.activated.connect(lambda m=1:self.change_offset_of_signal(m))
+        shortcut = QShortcut(QKeySequence("Alt+Left"), self)
+        shortcut.activated.connect(lambda m=0:self.change_offset_of_signal(m))
+        shortcut = QShortcut(QKeySequence("Alt+Up"), self)
+        shortcut.activated.connect(lambda m=1:self.change_amp_of_signal(m))
+        shortcut = QShortcut(QKeySequence("Alt+Down"), self)
+        shortcut.activated.connect(lambda m=0:self.change_amp_of_signal(m))
+        
         self.extra_ui()
     
     # region Utilities 
@@ -138,7 +151,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         """
         self.project_registry = signal_registry(workingdir)
         self.project_registry.signals_df = registry
-        self.spectrumViewbox.setRowCount(2) # 1: inp signal spec, 2: op signal spec
+        self.spectrumINOUT_Viewbox.setRowCount(2) # 1: inp signal spec, 2: op signal spec
+        # self.spectrumViewbox.setRowCount(2) # 1: inp signal spec, 2: op signal spec
         self.order_key = dict()
         self.SamplingRate = 16000
         self.init_spectrum_widgets()
@@ -210,7 +224,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
                          1: Adaptive Filter (AF) based
                          2: DeepfilterNet + AF based
         """
-        ...
+        # if hasattr(self, "NCA_method"): self.NCA_method = None
+        self.static_output_spect_widget.setNCAmethod(getANC_method(index))
     
     def samplingRateChangedTask(self, index):
         if index==0:
@@ -290,8 +305,41 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             self.start_streaming_btn.setText("Start streaming...")
         
         
-
+    def signalList_treeWidget_item_double_clicked(self, item, index):
+        r = self.signalList_treeWidget.indexOfTopLevelItem(item) - 2
+        if 0 <= r < self.spectrumViewbox.rowCount():
+            item = self.spectrumViewbox.item(r, 0)
+                    
+            # Scroll to the item
+            self.spectrumViewbox.scrollToItem(item)
             
+            # Optionally select the row for better visibility
+            self.spectrumViewbox.selectRow(r)
+            
+    def selected_row_of_spectrumViewbox(self):
+        selected_items = self.spectrumViewbox.selectedIndexes()
+        # Check if any item is selected
+        if selected_items:
+            # Return the row of the first selected item
+            return selected_items[0].row()
+        else:
+            # No item is selected
+            return None
+        
+    def change_offset_of_signal(self, m):
+        srid  =self.selected_row_of_spectrumViewbox()
+        if srid != None:
+            _m = 1 if m else -1
+            self.order_key[srid]["widget"].shift_slider.setValue(self.order_key[srid]["widget"].shift_slider.value() + _m)
+        
+            
+    def change_amp_of_signal(self, m):
+        srid = self.selected_row_of_spectrumViewbox()
+        if srid != None:
+            _m = 0.1 if m else -0.1
+            self.order_key[srid]["widget"].amp_slider.setValue(self.order_key[srid]["widget"].amp_slider.value() + _m)
+            
+        
     # endregion    
     # region Signal streamer
     def addASignalStremer(self, stype:str, 
@@ -324,12 +372,12 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         
         tspwidegt = TimeSeriesPlotWidget(update_setting_slot=self.update_setting_slotupdateInputAudio,
                                          **plotsetting) 
-        self.spectrumViewbox.setRowCount(order+3)
-        self.spectrumViewbox.setRowHeight(order+2, 200)
-        self.spectrumViewbox.setCellWidget(order+2, 1, tspwidegt)
+        self.spectrumViewbox.setRowCount(order+1)
+        self.spectrumViewbox.setRowHeight(order, 200)
+        self.spectrumViewbox.setCellWidget(order, 1, tspwidegt) 
         # label adding 
         _label = getRotatedLabel(name=os.path.basename(audio_file), font_size=6, height=200)
-        self.spectrumViewbox.setCellWidget(order+2, 0, _label)
+        self.spectrumViewbox.setCellWidget(order, 0, _label)
         self.order_key.update({order:
             dict(
                 name=signal_key,
@@ -381,10 +429,11 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
         prev_order = self.project_registry.signals_df[signal_key]["order"]
         self.project_registry.signals_df.pop(signal_key)
         
-        row_id = prev_order + 2
+        row_id = prev_order 
         self.spectrumViewbox.removeRow(row_id)      
-        self.signalList_treeWidget.takeTopLevelItem(row_id)
+        self.signalList_treeWidget.takeTopLevelItem(row_id+2)
         
+        # rearrange
         for o in range(prev_order, len(self.order_key) - 1):
             self.order_key[o] = self.order_key[o+1]
             name = self.order_key[o]["name"]
@@ -424,10 +473,10 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             # create default static_input_spect_widget attribute
             self.static_input_spect_widget: TimeFrequencyWidget = getDefultSpectrumWidget(True)
             _label = getRotatedLabel("Input signal", height=300)
-            self.spectrumViewbox.setCellWidget(0, 0, _label)
+            self.spectrumINOUT_Viewbox.setCellWidget(0, 0, _label)
 
-            self.spectrumViewbox.setRowHeight(0, 300)
-            self.spectrumViewbox.setCellWidget(0, 1, self.static_input_spect_widget)
+            self.spectrumINOUT_Viewbox.setRowHeight(0, 300)
+            self.spectrumINOUT_Viewbox.setCellWidget(0, 1, self.static_input_spect_widget)
             
             self.addSignalItem("Input Signal", 0, parmanent=True)
         
@@ -436,9 +485,9 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             self.static_output_spect_widget: EnhancedTimeFrequencyWidget = getDefultSpectrumWidget(False)
             
             _label = getRotatedLabel("Enhanced signal", height=300)
-            self.spectrumViewbox.setCellWidget(1, 0, _label)
-            self.spectrumViewbox.setRowHeight(1, 300)
-            self.spectrumViewbox.setCellWidget(1, 1, self.static_output_spect_widget)
+            self.spectrumINOUT_Viewbox.setCellWidget(1, 0, _label)
+            self.spectrumINOUT_Viewbox.setRowHeight(1, 300)
+            self.spectrumINOUT_Viewbox.setCellWidget(1, 1, self.static_output_spect_widget)
         
             self.addSignalItem("Enhanced Signal", 1, parmanent=True)
         
@@ -469,6 +518,8 @@ class NoiseShiled(Ui_ANC_interface, QMainWindow):
             # chunk_index=0,
             cSampling_rate=self.SamplingRate
         )
+        
+        self.NCAChangedTask(0)
     
     #region LIVE recording 
     def start_recording_action(self, flag):

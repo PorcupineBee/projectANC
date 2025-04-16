@@ -245,7 +245,7 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
         data = data.flatten()
         self.livedata = np.append(self.livedata, data)
         self._fs = fs
-        print("inside setSignalChunk")
+        # print("inside setSignalChunk")
         if self.show_spectrum_flag:
             self.f, _t, chunk = scipy.signal.spectrogram(data, 
                                                     fs=self._fs, 
@@ -255,11 +255,11 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
                                                     scaling='density', 
                                                     mode='psd')
             
-            print("max_min in chank: ", chunk.min(), chunk.max(), data.max(), data.min())
+            # print("max_min in chank: ", chunk.min(), chunk.max(), data.max(), data.min())
             chunk = 10 * np.log10(chunk + 1e-10)  # Add small value to avoid log(0)
             self.current_time += _t[-1] #self.chunk_size / self._fs
             
-            print("self.liveSpectrumdata",self.liveSpectrumdata.size)
+            # print("self.liveSpectrumdata",self.liveSpectrumdata.size)
             if self.liveSpectrumdata.size==0:
                 self.liveSpectrumdata = chunk
             else:
@@ -267,7 +267,7 @@ class SpectrogramWidget(pg.GraphicsLayoutWidget):
             
             # Update image and scale
             self.img.setImage(self.liveSpectrumdata.T)
-            print([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
+            # print([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
             # self.colorbar.setLevels([self.liveSpectrumdata.min(), self.liveSpectrumdata.max()])
             tr = QtGui.QTransform()
             tr.scale(self.current_time/self.liveSpectrumdata.shape[1], 
@@ -498,12 +498,19 @@ class EnhancedTimeFrequencyWidget(TimeFrequencyWidget):
         
         self.EnhancerThread = AudioEnhancingThread()
         self.EnhancerThread.enhanceSignal.connect(self.NoiseEleminationProcess)
+        self.ANCAmethod = None
     
     def start_denoising_task(self):
         self.EnhancerThread.start()
+    
+    def setNCAmethod(self, function):
+        # self.ANCAmethod = None
+        self.ANCAmethod = function
         
     def EnhanceThisAudio(self, audio, sr, barpos):
-        paudio = audio + np.random.normal(0, 0.02, size=audio.shape)
+        if self.ANCAmethod is not None:
+            paudio = self.ANCAmethod(audio, sr) # + np.random.normal(0, 0.02, size=audio.shape)
+            
         self.updateAudio(paudio, sr, barpos)
         
     def NoiseEleminationProcess(self):

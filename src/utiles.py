@@ -109,7 +109,7 @@ class signal_registry():
         case 1 : only add new signal
         case 2:  change sampling rate, add new signal, signal removed
         """
-        def _process(prop, _res_signal):
+        def _process(prop, _res_signal:np.ndarray):
             newfpath = copyFile(self._audio_folder, prop["newfpath"], new_sr=sampling_rate)     
             audio_signal, _ = ta.load(newfpath)
             audio_signal = audio_signal.contiguous().numpy().flatten()
@@ -126,7 +126,7 @@ class signal_registry():
                                 min(len(_res_signal)-total_offset, right_bound)]
             
             _res_signal = _res_signal/np.abs(_res_signal).max()
-            return _res_signal
+            return _res_signal.astype(np.float32)
         
         if signal_only_added and len(args)>0:
             # only add new signal to the resultant signal

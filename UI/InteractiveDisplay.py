@@ -277,7 +277,7 @@ class Ui_ANC_interface(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.groupBox_3.sizePolicy().hasHeightForWidth())
         self.groupBox_3.setSizePolicy(sizePolicy)
-        self.groupBox_3.setMaximumSize(QtCore.QSize(230, 16777215))
+        self.groupBox_3.setMaximumSize(QtCore.QSize(250, 16777215))
         self.groupBox_3.setObjectName("groupBox_3")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.groupBox_3)
         self.verticalLayout_4.setContentsMargins(5, 7, 5, 5)
@@ -289,7 +289,7 @@ class Ui_ANC_interface(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.signalList_treeWidget.sizePolicy().hasHeightForWidth())
         self.signalList_treeWidget.setSizePolicy(sizePolicy)
-        self.signalList_treeWidget.setMaximumSize(QtCore.QSize(220, 16777215))
+        self.signalList_treeWidget.setMaximumSize(QtCore.QSize(240, 16777215))
         self.signalList_treeWidget.setStyleSheet("/* QTreeWidget Background and Borders */\n"
 "QTreeWidget {\n"
 "    background-color: #2c3e50; /* Dark background */\n"
@@ -330,7 +330,7 @@ class Ui_ANC_interface(object):
 "QTreeWidget QScrollBar:vertical {\n"
 "    border: none;\n"
 "    background: #2c3e50;\n"
-"    width: 10px;\n"
+"    width: 5px;\n"
 "}\n"
 "\n"
 "QTreeWidget QScrollBar::handle:vertical {\n"
@@ -529,22 +529,7 @@ class Ui_ANC_interface(object):
         self.gridLayout.addWidget(self.start_streaming_btn, 6, 0, 1, 2)
         self.verticalLayout_4.addWidget(self.frame_3)
         self.groupBox_4 = QtWidgets.QGroupBox(self.splitter_2)
-        self.groupBox_4.setObjectName("groupBox_4")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_4)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.splitter_3 = QtWidgets.QSplitter(self.groupBox_4)
-        self.splitter_3.setOrientation(QtCore.Qt.Vertical)
-        self.splitter_3.setObjectName("splitter_3")
-        self.frame_4 = QtWidgets.QFrame(self.splitter_3)
-        self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame_4.setObjectName("frame_4")
-        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.frame_4)
-        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_7.setSpacing(0)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
-        self.spectrumINOUT_Viewbox = QtWidgets.QTableWidget(self.frame_4)
-        self.spectrumINOUT_Viewbox.setStyleSheet("QTableWidget {\n"
+        self.groupBox_4.setStyleSheet("QTableWidget {\n"
 "    background-color: #121212;\n"
 "    alternate-background-color: #1e1e1e;\n"
 "    color: #e0e0e0;\n"
@@ -570,7 +555,7 @@ class Ui_ANC_interface(object):
 "\n"
 "QScrollBar:vertical {\n"
 "    background: #1e1e1e;\n"
-"    width: 12px;\n"
+"    width: 8px;\n"
 "    margin: 0px 0px 0px 0px;\n"
 "}\n"
 "\n"
@@ -608,6 +593,23 @@ class Ui_ANC_interface(object):
 "    width: 0px;\n"
 "}\n"
 "")
+        self.groupBox_4.setObjectName("groupBox_4")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox_4)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.splitter_3 = QtWidgets.QSplitter(self.groupBox_4)
+        self.splitter_3.setOrientation(QtCore.Qt.Vertical)
+        self.splitter_3.setHandleWidth(0)
+        self.splitter_3.setObjectName("splitter_3")
+        self.frame_4 = QtWidgets.QFrame(self.splitter_3)
+        self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_4.setObjectName("frame_4")
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.frame_4)
+        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_7.setSpacing(0)
+        self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.spectrumINOUT_Viewbox = QtWidgets.QTableWidget(self.frame_4)
+        self.spectrumINOUT_Viewbox.setStyleSheet("")
         self.spectrumINOUT_Viewbox.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.spectrumINOUT_Viewbox.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.spectrumINOUT_Viewbox.setObjectName("spectrumINOUT_Viewbox")
@@ -623,6 +625,12 @@ class Ui_ANC_interface(object):
         self.spectrumINOUT_Viewbox.horizontalHeader().setStretchLastSection(True)
         self.spectrumINOUT_Viewbox.verticalHeader().setCascadingSectionResizes(True)
         self.verticalLayout_7.addWidget(self.spectrumINOUT_Viewbox)
+        self.line_5 = QtWidgets.QFrame(self.frame_4)
+        self.line_5.setStyleSheet("border:2px solid #999;")
+        self.line_5.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_5.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_5.setObjectName("line_5")
+        self.verticalLayout_7.addWidget(self.line_5)
         self.frame_5 = QtWidgets.QFrame(self.splitter_3)
         self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -632,70 +640,7 @@ class Ui_ANC_interface(object):
         self.verticalLayout_6.setSpacing(0)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.spectrumViewbox = QtWidgets.QTableWidget(self.frame_5)
-        self.spectrumViewbox.setStyleSheet("QTableWidget {\n"
-"    background-color: #121212;\n"
-"    alternate-background-color: #1e1e1e;\n"
-"    color: #e0e0e0;\n"
-"    gridline-color: #2e2e2e;\n"
-"    selection-background-color: #3d5afe;\n"
-"    selection-color: #ffffff;\n"
-"    border: 1px solid #2e2e2e;\n"
-"    font-size: 14px;\n"
-"}\n"
-"\n"
-"QHeaderView::section {\n"
-"    background-color: #2b2b2b;\n"
-"    color: #e0e0e0;\n"
-"    padding: 4px;\n"
-"    border: 1px solid #3c3c3c;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QTableCornerButton::section {\n"
-"    background-color: #2b2b2b;\n"
-"    border: 1px solid #3c3c3c;\n"
-"}\n"
-"\n"
-"QScrollBar:vertical {\n"
-"    background: #1e1e1e;\n"
-"    width: 12px;\n"
-"    margin: 0px 0px 0px 0px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #555;\n"
-"    min-height: 20px;\n"
-"    border-radius: 6px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #888;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
-"    height: 0px;\n"
-"}\n"
-"\n"
-"QScrollBar:horizontal {\n"
-"    background: #1e1e1e;\n"
-"    height: 12px;\n"
-"    margin: 0px 0px 0px 0px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #555;\n"
-"    min-width: 20px;\n"
-"    border-radius: 6px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #888;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
-"    width: 0px;\n"
-"}\n"
-"")
+        self.spectrumViewbox.setStyleSheet("")
         self.spectrumViewbox.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.spectrumViewbox.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.spectrumViewbox.setObjectName("spectrumViewbox")
@@ -736,8 +681,10 @@ class Ui_ANC_interface(object):
         self.widget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>ANC Experiment</p></body></html>"))
         self.add_Audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noised or clean Audio file from local folder</span></p></body></html>"))
         self.add_Audio_btn.setText(_translate("ANC_interface", "Import Audio file"))
+        self.add_Audio_btn.setShortcut(_translate("ANC_interface", "Ctrl+A"))
         self.browse_noise_audio_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">Import Noise file from local folder</span></p></body></html>"))
         self.browse_noise_audio_btn.setText(_translate("ANC_interface", "Import Noise file"))
+        self.browse_noise_audio_btn.setShortcut(_translate("ANC_interface", "Ctrl+N"))
         self.noise_type_comboBox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Select default noise audio to mix in clean audio file</p></body></html>"))
         self.noise_type_comboBox.setCurrentText(_translate("ANC_interface", "Select Noise audio..."))
         self.noise_type_comboBox.setPlaceholderText(_translate("ANC_interface", "Select a noise signal"))
@@ -754,6 +701,7 @@ class Ui_ANC_interface(object):
         self.Sampling_rate_comboBox.setItemText(2, _translate("ANC_interface", "48 kHz"))
         self.start_recording_btn.setToolTip(_translate("ANC_interface", "<html><head/><body><p><span style=\" font-weight:400;\">start live audio recording</span></p></body></html>"))
         self.start_recording_btn.setText(_translate("ANC_interface", "Start Live recording"))
+        self.start_recording_btn.setShortcut(_translate("ANC_interface", "Ctrl+S, Ctrl+R"))
         self.groupBox_3.setTitle(_translate("ANC_interface", "\\ Signal Tree \\ Com. settings"))
         self.signalList_treeWidget.setToolTip(_translate("ANC_interface", "<html><head/><body><p>imported Audio tree</p></body></html>"))
         self.signalList_treeWidget.headerItem().setText(0, _translate("ANC_interface", "Audio Items"))
@@ -763,7 +711,9 @@ class Ui_ANC_interface(object):
         self.slct_con_end_comboBox.setItemText(0, _translate("ANC_interface", "Transmitter Role"))
         self.slct_con_end_comboBox.setItemText(1, _translate("ANC_interface", "Receiver Role"))
         self.trun_on_server_btn.setText(_translate("ANC_interface", "Trun on Server"))
+        self.trun_on_server_btn.setShortcut(_translate("ANC_interface", "Alt+Right"))
         self.start_streaming_btn.setText(_translate("ANC_interface", "Start broadcasting..."))
+        self.start_streaming_btn.setShortcut(_translate("ANC_interface", "Ctrl+S, Ctrl+B"))
         self.groupBox_4.setTitle(_translate("ANC_interface", "\\ Signal waveform viewbox"))
         self.spectrumINOUT_Viewbox.setToolTip(_translate("ANC_interface", "<html><head/><body><p>Waveform graphics view area</p></body></html>"))
         item = self.spectrumINOUT_Viewbox.horizontalHeaderItem(0)

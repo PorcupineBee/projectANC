@@ -14,7 +14,7 @@ root = os.path.dirname(__file__).replace("\\", "/")
 #%%
 model, df_state, _ = init_df()  # Load default model
 # noisy_audio_path = "A:/gitclones/EEproject/raw_data/assets_noisy_snr0.wav"
-noisy_audio_path = "A:/gitclones/EEproject/Test4.wav"
+noisy_audio_path = "A:/gitclones/EEproject/raw_data/Test4.wav"
 # ===== down load audio file if not have in local 
 # audio_path = download_file(
 #         "https://github.com/Rikorose/DeepFilterNet/raw/e031053/assets/noisy_snr0.wav",
